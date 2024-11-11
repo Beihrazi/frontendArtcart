@@ -10,19 +10,17 @@ import Footer2 from "../common/Footer2";
 import FeaturedProducts from "./FeaturedProducts";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import getCurrentUser from "../../apiCalls/getCurrentUser";
-import { getAllCategoriesFromBackend } from "../../apiCalls/admin/getAllCategoriesFromBackend";
+import { fetchProducts } from "../../reduxToolkit/features/productList/ProductSlice";
 
 const LandingPage = () => {
-  const { currentUser } = useSelector((store) => store.auth);
-  const token = localStorage.getItem("jwttoken");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  useEffect(() => {
-    getCurrentUser(token, navigate, dispatch);
-    getAllCategoriesFromBackend(dispatch);
-  }, [currentUser.name]);
+  const dispatch = useDispatch()
+  const {products} = useSelector((state) => state.product)
+  // console.log("Products from slice: ", products)
+  
+  useEffect(()=>{
+    dispatch(fetchProducts())
+  },[dispatch])
+
   return (
     <Wrapper>
       <Header />
@@ -43,7 +41,7 @@ const Wrapper = styled.div`
       rgba(27, 2, 10, 0.671),
       rgba(44, 75, 100, 0.852)
     ),
-    url("./images/background.jpg");
+    url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841259/background_mprabz.jpg");
   background-size: contain;
   background-position: center;
 `;

@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
-import TextError from "./TextError";
-import axios from "axios";
-import { BASE_URL } from "./common/config";
-import { BASE_URL_LOCAL } from "../apiCalls/common-db";
 import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+
 
 const initialValues = {
   email: "",
@@ -18,38 +16,42 @@ const initialValues = {
 const Registration = () => {
   const [loading, setLoading] = useState(false);
 
+  // Determine the role based on the URL
+  const isSeller = window.location.href.includes('/seller/register');
+  const isAdmin = window.location.href.includes('/admin/register');
+
   const onSubmit = (values) => {
-    setLoading(true); // Set loading to true during form submission
-
-    values["role"] =
-      window.location.href.split("/")[3] === "seller" ? "seller" : "customer";
-
+    setLoading(true);
+    values["role"] = isSeller ? "seller" : isAdmin ? "admin" : "customer";
+  
+    const endpoint = isSeller
+      ? `${import.meta.env.VITE_BASE_URL}/api/seller/register`
+      : isAdmin
+      ? `${import.meta.env.VITE_BASE_URL}/api/admin/register`
+      : `${import.meta.env.VITE_BASE_URL}/api/users/register`;
+  
     axios
-      .post(`${BASE_URL_LOCAL}/auth/signup`, values)
+      .post(endpoint, values)
       .then((res) => {
-        console.log("res", res.data);
-        if (res.data.status === false) {
-          toast.success(res.data.message); // Show success toast
+        toast.success(res.data.message || "Registration successful!");
+      })
+      .catch((error) => {
+        // Check if the error response contains a specific message
+        if (error.response && error.response.data && error.response.data.msg) {
+          toast.error(error.response.data.msg); // Display backend error message
         } else {
-          toast.success("Registration successful!"); // Show success toast
+          toast.error("Registration failed!"); // Default error message
         }
       })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Registration failed!"); // Show error toast
-      })
       .finally(() => {
-        setLoading(false); // Set loading to false after registration
+        setLoading(false);
       });
   };
+  
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .required("Email Required")
-      .email("Invalid Email Format"),
-    password: Yup.string()
-      .required("Password Required")
-      .min(8, "Password must be at least 8 characters"),
+    email: Yup.string().required("Email Required").email("Invalid Email Format"),
+    password: Yup.string().required("Password Required").min(8, "Password must be at least 8 characters"),
   });
 
   return (
@@ -60,30 +62,25 @@ const Registration = () => {
           <div className="content">
             <h1>Join the largest artwork community</h1>
             <p id="content-p">
-              Get free access to millions pieces of art, showcase, promote, sell
-              & share your work with other members in the ArtWork Community.
+              Get free access to millions of pieces of art, showcase, promote, sell & share your work with others.
             </p>
           </div>
         </div>
 
         <div className="registrationSection">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
             <Form>
               <h2 className="title">Join ArtWork</h2>
               <div className="form-control">
                 <label htmlFor="email">Email</label>
                 <Field type="email" id="email" name="email" />
-                <ErrorMessage name="email" component={TextError} />
+                <ErrorMessage name="email" component="div" className="error" />
               </div>
 
               <div className="form-control">
                 <label htmlFor="password">Password</label>
                 <Field type="password" id="password" name="password" />
-                <ErrorMessage name="password" component={TextError} />
+                <ErrorMessage name="password" component="div" className="error" />
               </div>
 
               <button type="submit" disabled={loading}>
@@ -92,14 +89,7 @@ const Registration = () => {
 
               <p>
                 Already a member?{" "}
-                <NavLink
-                  className="log-in"
-                  to={
-                    window.location.href.split("/")[3] === "seller"
-                      ? "/seller/login"
-                      : "/login"
-                  }
-                >
+                <NavLink className="log-in" to={isSeller ? "/seller/login" : (isAdmin ? "/admin/login" : "/users/login")}>
                   Log in
                 </NavLink>
               </p>
@@ -116,7 +106,7 @@ export default Registration;
 const Wrapper = styled.div`
   height: 97vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.365), rgba(0, 0, 0, 0.5)),
-    url("./images/nature.jpg");
+    url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841799/nature_fn4vu8.jpg");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -132,7 +122,7 @@ const Wrapper = styled.div`
   .imageSection {
     flex: 1;
     background-image: linear-gradient(rgba(0, 0, 0, 0.486), rgba(0, 0, 0, 0.42)),
-      url("./images/flower.jpg");
+      url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841993/flower_z0ewcs.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -145,9 +135,6 @@ const Wrapper = styled.div`
   h1 {
     width: 80%;
     font-size: 40px;
-    text-transform: uppercase;
-    font-weight: bold;
-    line-height: 1.2;
     color: #fff;
     margin-bottom: 30px;
   }
@@ -157,13 +144,11 @@ const Wrapper = styled.div`
   }
   .registrationSection {
     background: #f8f8fef3;
-
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 60px 0px;
-    border-radius: 1px solid black;
   }
 
   .title {
@@ -183,7 +168,6 @@ const Wrapper = styled.div`
     width: 300px;
     padding: 6px 12px;
     font-size: 16px;
-    line-height: 1.4;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;

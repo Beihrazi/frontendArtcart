@@ -19,14 +19,14 @@ const AdminNav = () => {
         <div className="right">
           <ul>
             <li>
-              <StyledLink to="/admin/dashboard">Home</StyledLink>
+              <StyledLink to="/admin  ">Home</StyledLink>
             </li>
             <li>
               <StyledLink
                 onClick={() => {
                   dispatch(signout());
                 }}
-                to={"/login"}
+                to={"/admin/login"}
               >
                 Logout
               </StyledLink>

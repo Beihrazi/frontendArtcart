@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { FaLessThanEqual } from "react-icons/fa";
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
+    //latest change
+    isLoggedIn: false,
+    user: null,
+
     signin: false,
     currentUser: {},
     token: "",
@@ -10,6 +15,14 @@ const authSlice = createSlice({
     orderCreate: false,
   },
   reducers: {
+    login: (state, action) =>{
+      state.isLoggedIn = true;
+      state.user = action.payload;
+    },
+    logout: (state, action) => {
+      state.isLoggedIn = false;
+      state.user = null;
+    },
     signIn: (state, action) => {
       state.signin = true;
       state.token = action.payload;
@@ -43,6 +56,8 @@ const authSlice = createSlice({
 });
 
 export const {
+  login,
+  logout,
   signIn,
   signUp,
   currentUser,

@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const ImageProduct = ({ data }) => {
+
   const [curImage, setImage] = useState(0);
   const handleImageClick = (index) => {
     setImage(index);
   };
-
+  console.log("curImage index: ", curImage)
   console.log("image product", data);
   return (
     <Wrapper>
@@ -14,18 +15,18 @@ const ImageProduct = ({ data }) => {
         <Container>
           <div className="main-screen">
             <div className="main-figure">
-              <img src={data.productImages[curImage].name} alt={data.name} />
+              <img src={data.photos[curImage]} alt={data.name} />
             </div>
           </div>
 
           <div className="grid-cols">
-            {data.productImages.map((i, index) => (
+            {data.photos.map((url, index) => (
               <div
                 className="figure"
-                key={i.id}
+                key={index}
                 onClick={() => handleImageClick(index)}
               >
-                <img src={i.name} alt={data.name} />
+                <img src={url} alt={`Image ${index + 1}`} />
               </div>
             ))}
           </div>

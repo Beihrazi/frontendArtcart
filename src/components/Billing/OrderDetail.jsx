@@ -7,18 +7,26 @@ import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const OrderDetail = () => {
+  const carts = useSelector((state) => state.cart);
+  console.log("carts: ", carts)
+
   const cartItems = useSelector((state) => state.cart.cartItems);
+  // console.log("cartItems: ", cartItems)
+
   const cartQuantity = useSelector((state) => state.cart.cartTotalQuantity);
+  // console.log("cartQuantity: ", cartQuantity)
+
   const cartAmount = useSelector((state) => state.cart.cartTotalAmount);
+  // console.log("cartAmount: ", cartAmount)
 
   return (
     <Wrapper>
       <Container>
         <div className="items">
           {cartItems.map((item) => (
-            <div className="product-detail" key={item.id}>
+            <div className="product-detail" key={item._id}>
               <div className="item-image">
-                <img src={item.productImages[0].name} alt={item.id} />
+                <img src={item.photos[0]} alt={item._id} />
               </div>
               <div className="description">
                 <p className="title">{item.name} </p>

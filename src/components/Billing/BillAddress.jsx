@@ -12,34 +12,34 @@ import {
   RadioGroup,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Formik, Field, ErrorMessage, Form } from "formik";
 import * as yup from "yup";
-import ShoppingCartCheckoutOutlinedIcon from "@mui/icons-material/ShoppingCartCheckoutOutlined";
-import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
-import { CurrencyRupee } from "@mui/icons-material";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import { addressData } from "./addressData";
+import { addressData } from "./addressData";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addBillingAddress,
   updateAddressId,
   updateBillingAddress,
   updateCustomerDetails,
 } from "../../reduxToolkit/features/productList/BillingAddressSlice";
-import { addAddress } from "../../apiCalls/users/addAddress";
+// import { addAddress } from "../../apiCalls/users/addAddress";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchBillingData,
+  insertBilling,
+  updateBilling,
+} from "../../reduxToolkit/features/productList/BillingSlice";
+import store from "../../reduxToolkit/app/store";
 
-const BillAddress = ({
-  setNextButtonDisabled,
-  nextButtonDisabled,
-  handleDeliverClick,
+const BillAddress = ({setNextButtonDisabled,nextButtonDisabled,handleDeliverClick,
 }) => {
+
   const dispatch = useDispatch();
-  //Radio-buttons
+
   const selectedAddressIdFromRedux = useSelector(
     (state) => state.billingAddress.addressId
   );
@@ -55,17 +55,23 @@ const BillAddress = ({
   const initialValues = {
     pincode: "",
     locality: "",
-    address: "",
+    street: "",
     city: "",
     state: "",
     landmark: "",
   };
 
-  const addressData = useSelector((store) => store.auth.currentUser.address);
-  const token = useSelector((store) => store.auth.token);
+  //Updated - 06/11/24
+  useEffect(() => {
+    dispatch(fetchBillingData());
+  }, []);
+
+ 
+  // const addressData = useSelector((store) => store.auth.currentUser.address);
+  // const token = useSelector((store) => store.auth.token);
 
   const validationSchema = yup.object({
-    address: yup.string().required("Address is required"),
+    street: yup.string().required("Address is required"),
     city: yup.string().required("City/District/Town is required"),
     state: yup.string().required("State is required"),
     locality: yup.string().required("locality is required"),
@@ -75,53 +81,50 @@ const BillAddress = ({
       .length(6, "Pincode must be 6 digits"),
   });
 
-  const onSubmit = (values) => {
-    //api call to store customer address
+  const onSubmitSecondPart = (values) => {
     console.log("address data ", values);
-    //after that update the state variable
-    addAddress(values, token, dispatch);
-
-    // dispatch(addBillingAddress(values));
+    dispatch(insertBilling(values));
   };
+
   const onSubmit2 = (values) => {
-    dispatch(
-      updateBillingAddress({
-        orderId: selectedAddress.orderId,
-        updatedData: values,
-      })
-    );
-    handleCancelClick();
+    console.log("personal data: ", values)
+    dispatch(updateBilling(values))
   };
 
   const [expandedAddresses, setExpandedAddresses] = useState({});
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const handleEditButtonClick = (ad) => {
+  // console.log("object: ", expandedAddresses)
+  
+  const handleEditButtonClick = (address) => {
     const newExpandedAddresses = { ...expandedAddresses };
-    if (expandedAddresses[ad.orderId]) {
+    const addressId = address._id; 
+  
+    if (expandedAddresses[addressId]) {
       // If the accordion is already expanded, close it
-      delete newExpandedAddresses[ad.orderId];
+      delete newExpandedAddresses[addressId];
       setSelectedAddress(null); // Reset selected address
     } else {
       // If the accordion is not expanded, expand it
-      newExpandedAddresses[ad.orderId] = true;
-      setSelectedAddress(ad);
+      newExpandedAddresses[addressId] = true;
+      setSelectedAddress(address); // Set the selected address
     }
     setExpandedAddresses(newExpandedAddresses);
   };
+  
 
   const handleCancelClick = () => {
     // Close the accordion when cancel is clicked
     setExpandedAddresses({});
     setSelectedAddress(null); // Reset selected address
   };
-  const userAddress = useSelector(
-    (state) => state.billingAddress.billingAddresses
-  );
+  // const userAddress = useSelector(
+  //   (state) => state.billingAddress.billingAddresses
+  // );
 
   const initialValues2 = selectedAddress
     ? {
-        address: selectedAddress.address,
+        street: selectedAddress.street,
         city: selectedAddress.city,
         state: selectedAddress.state,
         landmark: selectedAddress.landmark || "",
@@ -130,14 +133,12 @@ const BillAddress = ({
       }
     : {};
 
-  const { name, contact, alternateContact } = useSelector(
-    (state) => state.billingAddress
-  );
-
+  const data = useSelector((store) => store.billingAddress.billingInfo)
+  
   const initialValues3 = {
-    name: name || "",
-    contact: contact || "",
-    alternateContact: alternateContact || "",
+    name:  data?.name || "",
+    contact:  data?.contact || "",
+    altContact:  data?.altContact || "",
   };
   const validationSchema3 = yup.object({
     name: yup.string().required("Name is required"),
@@ -150,20 +151,19 @@ const BillAddress = ({
     //     .required('Contact number is required')
   });
 
-  const navigate = useNavigate();
-  const { signin } = useSelector((store) => store.auth);
-  useEffect(() => {
-    if (signin === false) {
-      console.log("usdj");
-      navigate("/login");
-    }
-  }, []);
+  // const user = useSelector((store)=>store.auth.isLoggedIn)
+  // console.log("user: ", user)
+  const billingData = useSelector((store) => store.billingAddress.billingInfo);
+  // console.log("billing data from billaddress: ", billingData)
+  
+  // console.log("address: ", billingData.address.map((ad)=> ad))
+
   return (
     <Wrapper>
       <Container>
         <div className="person-address">
           {/* first-part */}
-          {addressData?.length > 0 && (
+          {billingData?.address?.length > 0 && (
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -181,38 +181,46 @@ const BillAddress = ({
                       handleAddressSelection(event.target.value)
                     }
                   >
-                    {addressData.map((ad, index) => (
-                      <div key={ad.id} style={{ marginBottom: "1rem" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <FormControlLabel
-                            value={ad.id}
-                            control={
-                              <Radio checked={ad.id === selectedAddressId} />
-                            }
-                            label={`${ad.landmark}, ${ad.city}, ${ad.state} - ${ad.pincode}`}
-                            style={{ width: "calc(100% - 100px)" }}
-                          />
-                          {!expandedAddresses[ad.id] && ( // Show Edit button only if accordion is not expanded
-                            <Button
-                              variant="contained"
-                              onClick={() => handleEditButtonClick(ad)}
-                              style={{ marginRight: "1rem" }}
+                    {billingData.address.map((add) => (
+                        <div key={add._id} style={{ marginBottom: "1rem" }}>
+                      
+                            <div
+                              key={add._id}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                marginBottom: "1rem",
+                              }}
                             >
-                              Edit
-                            </Button>
-                          )}
-                        </div>
+                              <FormControlLabel
+                                value={add._id}
+                                control={
+                                  <Radio
+                                    checked={add._id === selectedAddressId}
+                                  />
+                                }
+                                label={`${add.landmark || "No Landmark"}, ${
+                                  add.city
+                                }, ${add.state} - ${add.pincode}`}
+                                style={{ width: "calc(100% - 100px)" }}
+                              />
+                              {!expandedAddresses[add._id] && (
+                                <Button
+                                  variant="contained"
+                                  onClick={() => handleEditButtonClick(add)}
+                                  style={{ marginRight: "1rem" }}
+                                >
+                                  Edit
+                                </Button>
+                              )}
+                            </div>
+              
                       </div>
                     ))}
                   </RadioGroup>
                 </FormControl>
-                {expandedAddresses[addressData.id] && (
+                {expandedAddresses[selectedAddress?._id] && (
                   <Accordion>
                     <AccordionDetails>
                       <div className="billing-address">
@@ -228,18 +236,18 @@ const BillAddress = ({
                                 <div className="address-bar">
                                   <div className="thirdrow">
                                     <Field
-                                      name="address"
+                                      name="street"
                                       as={TextField}
                                       id="outlined-multiline-static"
-                                      label="Address (Area and Streets)"
+                                      label="street (Area and Streets)"
                                       multiline
                                       rows={3}
                                       fullWidth
                                       error={
-                                        touched.address && !!errors.address
+                                        touched.street && !!errors.street
                                       }
                                       helperText={
-                                        touched.address && errors.address
+                                        touched.street && errors.street
                                       }
                                     />
                                   </div>
@@ -414,7 +422,7 @@ const BillAddress = ({
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
-                  onSubmit={onSubmit}
+                  onSubmit={onSubmitSecondPart}
                 >
                   {({ errors, touched, isSubmitting }) => (
                     <Form>
@@ -423,15 +431,15 @@ const BillAddress = ({
                         <div className="address-bar">
                           <div className="thirdrow">
                             <Field
-                              name="address"
+                              name="street"
                               as={TextField}
                               id="outlined-multiline-static"
-                              label="Address (Area and Streets)"
+                              label="street (Area and Streets)"
                               multiline
                               rows={3}
                               fullWidth
-                              error={touched.address && !!errors.address}
-                              helperText={touched.address && errors.address}
+                              error={touched.street && !!errors.street}
+                              helperText={touched.street && errors.street}
                             />
                           </div>
                           <div className="fourthrow">
@@ -562,11 +570,12 @@ const BillAddress = ({
           {/* personal-detail */}
           <Formik
             initialValues={initialValues3}
+            enableReinitialize={true}
             validationSchema={validationSchema3}
             onSubmit={(values) => {
               // Handle form submission
               console.log(values);
-              dispatch(updateCustomerDetails(values));
+              dispatch(updateBilling(values))
               handleDeliverClick(); // Call the handleDeliverClick function
             }}
           >
@@ -610,9 +619,9 @@ const BillAddress = ({
                   <div className="secondrow">
                     <div className="palternate-contact">
                       <Field
-                        name="alternateContact"
+                        name="altContact"
                         as={TextField}
-                        id="alternateContact"
+                        id="altContact"
                         label="Alternate mobile number"
                         type="number"
                         InputLabelProps={{ shrink: true }}
@@ -622,10 +631,10 @@ const BillAddress = ({
                           marginTop: "1rem",
                         }}
                         error={
-                          touched.alternateContact && !!errors.alternateContact
+                          touched.altContact && !!errors.altContact
                         }
                         helperText={
-                          touched.alternateContact && errors.alternateContact
+                          touched.altContact && errors.altContact
                         }
                       />
                     </div>
@@ -651,49 +660,6 @@ const BillAddress = ({
             )}
           </Formik>
         </div>
-
-        {/* <div className="price-detail">
-                    <h2>Order Summary</h2>
-                    <div className="mini-container">
-
-                        <div className="desc1">
-                            <ShoppingCartCheckoutOutlinedIcon />
-                            <span id='cartid'><span className='count'>( 1 ) </span> items in cart</span>
-                        </div>
-                        <div className="item first">
-                            <div className="desc order">Order Subtotal</div>
-                            <div className="no">
-                                <CurrencyRupeeOutlinedIcon
-                                    style={{
-                                        height: "1.2rem"
-                                    }}
-                                />200
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="desc charge">Delivery Charges</div>
-                            <div className="no" style={{ textDecoration: 'line-through', color: "red" }}>
-                                <CurrencyRupee
-                                    style={{
-                                        height: "1.2rem",
-                                        color: "red"
-                                    }}
-                                /><span id="number">10</span>
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="desc total">Pre-Tax Total</div>
-                            <div className="no">
-                                <CurrencyRupeeOutlinedIcon
-                                    style={{
-                                        height: "1.2rem"
-                                    }}
-                                />200
-                            </div>
-                        </div>
-
-                    </div>
-                </div> */}
       </Container>
     </Wrapper>
   );

@@ -1,76 +1,95 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "./DataTable";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllUnapprovedSeller } from "../../apiCalls/admin/getAllUnapprovedSeller";
-import { approvedSeller } from "../../apiCalls/admin/approvedSeller";
-import { useNavigate } from "react-router-dom";
-// import { getAllUnapprovedSeller } from "../../api/getAllUnapprovedSeller";
+import axiosInstance from "../newUpdateComponents/axiosInstance";
 
 const ManageSeller = () => {
-  const token = useSelector((store) => store.auth.token);
+  const[pendingSeller, setPendingSeller] = useState([])
+  const [approvedSeller, setApprovedSeller] = useState([])
 
-  const unapprovedSellerList = useSelector(
-    (store) => store.admin.sellerRequest
-  );
-  const data = [
-    {
-      id: 1,
-      name: "John Doe",
-      aadhaarNumber: "1234 5678 9012",
-      aadharImage: "path_to_image_1.jpg",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      aadhaarNumber: "9876 5432 1098",
-      aadharImage: "path_to_image_2.jpg",
-    },
-    // Add more data as needed
-  ];
+  //Fetching sellers data
+  const fetchSellers = async() =>{
+    try {
+      const response = await axiosInstance.get("/api/admin/seller")
+      const users = response.data
+
+      const pending = users.filter(user => !user.isVerified)
+      // console.log("Pendingusers: ", pending)
+      const approved = users.filter(user => user.isVerified)
+      // console.log("Approvedusers: ", approved)
+
+      setPendingSeller(pending)
+      setApprovedSeller(approved)
+    } catch (error) {
+      console.log("Error fetching: ", error)
+    }
+  }
+
+  useEffect(()=>{
+    fetchSellers()
+  },[])
+
+  const [showPending, setShowPending] = useState(true);
+
+  const handleViewPending = () => setShowPending(true);
+  const handleViewApproved = () => setShowPending(false);
 
   const onViewAadharImage = (imagePath) => {
-    // Logic to open the image in a modal or new window
     window.open(imagePath);
   };
 
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
-  const onApprove = (id) => {
-    // Logic to handle approval
-    approvedSeller(token, id, 1, navigate, dispatch);
+  const onApprove = async (id) => {
+    // console.log("Approved seller with ID:", id);
+      try {
+        const res = await axiosInstance.patch(`/api/admin/seller/${id}`, {isVerified: true})
+        console.log("res: ", res.data)
+        fetchSellers()
+      } catch (error) {
+          console.log("Error during approving Seller: ", error.response?.data?.msg || error.message);
+      }
+    
   };
 
-  const onReject = (id) => {
-    // Logic to handle rejection
-    console.log("Rejected seller with ID:", id);
-    approvedSeller(token, id, 0);
+  const onReject = async(id) => {
+    try {
+      const res = await axiosInstance.delete(`/api/admin/seller/${id}`)
+      console.log("res: ", res.data.msg)
+      fetchSellers()
+    } catch (error) {
+        console.log("Error during approving Seller: ", error.response?.data?.msg || error.message);
+    }
   };
 
-  // const token = localStorage.getItem("token");
-  useEffect(() => {
-    getAllUnapprovedSeller(token, dispatch);
-  }, []);
+
   return (
-    <div className="flex p-4">
-      {/* left side */}
-      <div className="border-2 border-red-600 h-72 w-[25%]">
-        <div className="bg-gray-300 h-12 m-2 text-center p-3">
-          <h1>View All Request</h1>
+    <div className="flex p-4 space-x-4">
+      {/* Left side */}
+      <div className="border-2 border-gray-400 w-[25%] rounded-lg shadow-lg">
+        <div
+          className={`h-12 m-2 text-center p-3 cursor-pointer rounded ${showPending ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}
+          onClick={handleViewPending}
+        >
+          <h1>Pending Request</h1>
         </div>
-        <div className="bg-gray-300 h-12 m-2 text-center p-3">
-          <h1>List-of-All-seller</h1>
+        <div
+          className={`h-12 m-2 text-center p-3 cursor-pointer rounded ${!showPending ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
+          onClick={handleViewApproved}
+        >
+          <h1>Verified Sellers</h1>
         </div>
       </div>
 
-      {/* right side */}
-      <DataTable
-        data={unapprovedSellerList}
-        onViewAadharImage={onViewAadharImage}
-        onApprove={onApprove}
-        onReject={onReject}
-      />
+      {/* Right side */}
+      <div className={`flex-1 p-4 rounded-lg shadow-lg ${showPending ? "bg-blue-50 border-blue-300" : "bg-green-50 border-green-300"}`}>
+        <h2 className={`text-lg font-bold mb-4 ${showPending ? "text-blue-700" : "text-green-700"}`}>
+          {showPending ? "Pending Seller Requests" : "Approved Sellers"}
+        </h2>
+        <DataTable
+          data={showPending ? pendingSeller: approvedSeller}
+          onViewAadharImage={onViewAadharImage}
+          onApprove={onApprove}
+          onReject={onReject}
+        />
+      </div>
     </div>
   );
 };

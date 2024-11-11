@@ -23,12 +23,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { searchAndFilter } from "../../reduxToolkit/features/productList/ProductSlice";
 import toast from "react-hot-toast";
 import { orderSuccess } from "../../reduxToolkit/features/authSlice";
+import store from "../../reduxToolkit/app/store";
 
 const Products = () => {
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const categories = useSelector((state) => state.auth.productCategory);
+  const getCategories = useSelector((state)=>state.product.categories)
+  
   const product = useSelector((state) => state.product);
 
   const { auth } = useSelector((store) => store);
@@ -65,6 +67,8 @@ const Products = () => {
       ? filterProducts.slice(indexOfFirstItem, indexOfLastItem)
       : products.slice(indexOfFirstItem, indexOfLastItem);
 
+  // console.log("currentProducts: ",currentProducts)
+
   const [term, setTerm] = useState("");
   const [selectedValue, setSelectedValue] = useState("default");
   const [filter, setFilter] = useState("all");
@@ -74,7 +78,7 @@ const Products = () => {
 
   const handleSearchChange = (e) => {
     const searchTerm = e.target.value;
-    console.log("Search term:", searchTerm);
+    // console.log("Search term:", searchTerm);
     setTerm(searchTerm);
   };
 
@@ -101,7 +105,7 @@ const Products = () => {
     }
     setSelectedCategory(newselectedCategory);
   };
-  
+
   // All Filters working simultaneously
   const applyFilters = (searchTerm, priceFilter, sortOption) => {
     dispatch(
@@ -129,6 +133,12 @@ const Products = () => {
     }
     dispatch(orderSuccess(false));
   }, []);
+
+  // console.log("product slice: ", store.getState().product.products);
+  // useEffect(()=>{
+  //   dispatch(FeatureProducts)
+  // },[])
+
   return (
     <Container>
       <ImageSection>
@@ -174,8 +184,8 @@ const Products = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
-                {categories.map((item, index) => (
-                  <FormGroup key={item.id}>
+                {getCategories.map((item) => (
+                  <FormGroup key={item._id}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -272,7 +282,6 @@ const StyledPagination = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 500;
-  
 `;
 const List = styled.div`
   width: auto;
@@ -311,14 +320,19 @@ const FilterTop = styled.div`
   justify-content: center;
   align-items: center;
 
-  .title{
+  .title {
     font-weight: 500;
     color: #020d17;
   }
   .filter-content {
     height: 60px;
     width: 100%;
-    background-image: linear-gradient(90deg, rgb(255, 254, 254), rgba(224, 194, 149, 0.84), rgba(125, 158, 209, 0.756));
+    background-image: linear-gradient(
+      90deg,
+      rgb(255, 254, 254),
+      rgba(224, 194, 149, 0.84),
+      rgba(125, 158, 209, 0.756)
+    );
     display: flex;
     justify-content: space-between;
     padding: 0 15%;
@@ -357,7 +371,6 @@ const FilterTop = styled.div`
     width: 40%;
     padding-left: 10px;
     color: #070000;
-    
   }
 `;
 const SubContainer = styled.div`
@@ -366,7 +379,12 @@ const SubContainer = styled.div`
   gap: 50px;
 `;
 const LeftFilter = styled.div`
-  background-image: linear-gradient(180deg, rgba(228, 219, 219, 0.046),rgba(207, 198, 113, 0.575), rgba(141, 171, 215, 0.553));
+  background-image: linear-gradient(
+    180deg,
+    rgba(228, 219, 219, 0.046),
+    rgba(207, 198, 113, 0.575),
+    rgba(141, 171, 215, 0.553)
+  );
   display: flex;
   flex-direction: column;
   padding: 10px;

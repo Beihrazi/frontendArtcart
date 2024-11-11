@@ -15,12 +15,13 @@ const Cart = () => {
   let totalQuantity = useSelector((state) => state.cart.cartTotalQuantity);
   const { auth } = useSelector((store) => store);
   const navigate = useNavigate();
+  
   const handleCheckOut = () => {
     console.log("handle checkout");
-    if (auth.signin === true) {
+    if (auth.isLoggedIn === true) {
       navigate("/billing");
     } else {
-      navigate("/login");
+      navigate("/users/login");
     }
   };
 
@@ -44,7 +45,7 @@ const Cart = () => {
         <div className="cart-content">
           <div className="cart-details">
             {cartItems.map((item) => (
-              <SingleCart key={item.id} item={item} />
+              <SingleCart key={item._id} item={item} />
             ))}
           </div>
 

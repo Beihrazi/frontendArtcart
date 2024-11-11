@@ -23,18 +23,18 @@ const SingleCart = ({ item }) => {
 
   const handleDecrease = () => {
     // console.log("Decrease button clicked for item ID:", item.id);
-    dispatch(decreaseQuantity(item.id));
+    dispatch(decreaseQuantity(item._id));
   };
   const handleIncrease = () => {
     console.log("btn increase");
     // console.log("Increase button clicked for item ID:", item.id);
     // if (quantity < item.stock) dispatch(increaseQuantity(item.id));
-    dispatch(increaseQuantity(item.id));
+    dispatch(increaseQuantity(item._id));
   };
   //Delte cart
   const handleDelete = () => {
     toast.error("Product Removed!");
-    dispatch(removeFromCart(item.id));
+    dispatch(removeFromCart(item._id));
   };
 
   return (
@@ -42,7 +42,7 @@ const SingleCart = ({ item }) => {
       <Container>
         <div className="grid-six">
           <div className="item image">
-            <img src={item.productImages[0].name} alt={item.name} />
+            <img src={item.photos[0]} alt={item.name} />
           </div>
           <div className="item description">
             <p className="title">{item.name}</p>
@@ -50,7 +50,7 @@ const SingleCart = ({ item }) => {
               Category: <span id="catDetail">{item.category.name}</span>
             </span>
             <br />
-            <span id="stock">In Stock: {item.stock}</span>
+            <span id="stock">In Stock: {item.inStock}</span>
           </div>
           <div className="item each">
             <h4>Each</h4>
@@ -75,7 +75,7 @@ const SingleCart = ({ item }) => {
               />
               <AddIcon
                 className={`btn increase ${
-                  quantity === item.stock ? "disabled" : ""
+                  quantity === item.inStock ? "disabled" : ""
                 }`}
                 onClick={handleIncrease}
               />

@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import styled from "styled-components";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import TextError from "./TextError";
 import axios from "axios";
-import { BASE_URL } from "./common/config";
-import { BASE_URL_LOCAL } from "../apiCalls/common-db";
-import { useDispatch } from "react-redux";
-import { currentUser, signIn } from "../reduxToolkit/features/authSlice";
-import getCurrentUser from "../apiCalls/getCurrentUser";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { login } from "../reduxToolkit/features/authSlice";
 
+// Initial form values
 const initialValues = {
   email: "",
   password: "",
@@ -26,42 +25,52 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
-  const [loading, setLoading] = useState();
   const dispatch = useDispatch();
-  const url = window.location.href;
-  const d = url.split("/");
-  const s = d[3];
-
-  const onSubmit = async (values) => {
-    setLoading(true); // Set loading to true during form submission
-
-    try {
-      const res = await axios.post(`${BASE_URL_LOCAL}/auth/signin`, values);
-      if (res.data.auth && res.data.role === "ROLE_CUSTOMER") {
-        localStorage.setItem("jwttoken", res.data.token);
-        dispatch(signIn(res.data.token));
-        getCurrentUser(res.data.token, navigate, dispatch);
-        navigate("/products");
-      } else if (res.data.auth && res.data.role === "ROLE_SELLER") {
-        localStorage.setItem("jwttoken", res.data.token);
-        dispatch(signIn(res.data.token));
-        navigate("/seller");
-      } else if (res.data.auth && res.data.role === "ROLE_ADMIN") {
-        localStorage.setItem("jwttoken", res.data.token);
-        dispatch(signIn(res.data.token));
-        navigate("/admin/dashboard");
-      } else {
-        toast.error(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Login failed");
-    } finally {
-      setLoading(false); // Set loading to false after form submission
-    }
-  };
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  // Determine the role based on the current path
+  const currentRole = location.pathname.includes("seller") ? "seller" : 
+                      location.pathname.includes("admin") ? "admin" : 
+                      "users";
+
+  // Handle form submission
+  const onSubmit = async (values) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/login`, values);
+      console.log("data: ", res.data);
+      if (res.data.token) {
+        localStorage.setItem("jwttoken", res.data.token);
+        
+        // Redirect based on user role
+        switch (res.data.role) {
+          case "customer":
+            navigate("/"); // Redirect customers to products
+            dispatch(login(true))
+            break;
+          case "seller":
+            navigate("/seller");
+             // Redirect sellers to their dashboard
+            break;
+          case "admin":
+            navigate("/admin"); // Redirect admins to their dashboard
+            break;
+          default:
+            toast.error("Unknown role");
+        }
+      } else {
+        toast.success(res.data.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Wrapper>
@@ -71,7 +80,7 @@ const Login = () => {
           <div className="content">
             <h1>Join the largest artwork community</h1>
             <p id="content-p">
-              Get free access to millions peice of art, showcase, promote, sell
+              Get free access to millions of pieces of art, showcase, promote, sell
               & share your work with other members in the ArtWork Community.
             </p>
           </div>
@@ -87,10 +96,7 @@ const Login = () => {
               <h2 className="title">Log In</h2>
               <p>
                 Become an ArtWork.{" "}
-                <NavLink
-                  to={s === "seller" ? "/seller/register" : "/register"}
-                  className="log-in"
-                >
+                <NavLink to={`/${currentRole}/register`} className="log-in">
                   Join
                 </NavLink>
               </p>
@@ -122,7 +128,7 @@ export default Login;
 const Wrapper = styled.div`
   height: 97vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.365), rgba(0, 0, 0, 0.5)),
-    url("./images/nature.jpg");
+    url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841799/nature_fn4vu8.jpg");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -138,7 +144,7 @@ const Wrapper = styled.div`
   .imageSection {
     flex: 1;
     background-image: linear-gradient(rgba(0, 0, 0, 0.486), rgba(0, 0, 0, 0.42)),
-      url("./images/ship.jpg");
+      url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841842/ship_a2o3tq.jpg");
     background-size: cover;
     background-position: center;
     display: flex;

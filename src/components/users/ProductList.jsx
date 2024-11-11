@@ -11,17 +11,22 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { fetchCategories } from "../../reduxToolkit/features/productList/ProductSlice";
+import store from "../../reduxToolkit/app/store";
 
 const ProductList = ({ currentProducts }) => {
   const [value, setValue] = useState(2);
   const selectedProducts = useSelector((state) => state.product.products);
   const product = useSelector((state) => state.product);
   // console.log(product);
+  
   const dispatch = useDispatch();
 
   const toastMessage = useSelector((state) => state.wishlist.toastMessage);
-
+  // console.log("category store: ", store.getState().product.categories)
+  
   useEffect(() => {
+    dispatch(fetchCategories())
     if (toastMessage) {
       if (toastMessage.type === "added") {
         toast.success(toastMessage.text);
@@ -38,7 +43,7 @@ const ProductList = ({ currentProducts }) => {
     event.preventDefault();
     event.stopPropagation();
     //finding individual item
-    const product = selectedProducts.find((product) => product.id === id);
+    const product = selectedProducts.find((product) => product._id === id);
     dispatch(addToWishList({ product, quantity: 1 }));
   };
 
@@ -63,7 +68,10 @@ const ProductList = ({ currentProducts }) => {
   };
 
   const wishlistColor = useSelector((state) => state.wishlist.items);
-  console.log(wishlistColor);
+  // const wishlistStore = useSelector((store) => store.items)
+  // console.log("wishlistColor store: ", wishlistStore);
+
+  // console.log("categories: ", getCategories)
   return (
     <Container>
       <Toaster position="top-center" reverseOrder={false} />
@@ -77,14 +85,14 @@ const ProductList = ({ currentProducts }) => {
             // console.log("current product ", p.id);
             return (
               <NavLink
-                key={p.id}
-                to={`/product/${p.id}`}
+                key={p._id}
+                to={`/product/${p._id}`}
                 className="grid-item-link"
               >
                 <GridItem className={`grid-items`}>
                   <div
                     className="wish"
-                    onClick={(event) => handleFavoriteClick(p.id, event)}
+                    onClick={(event) => handleFavoriteClick(p._id, event)}
                   >
                     <FavoriteOutlined
                       style={{
@@ -92,30 +100,19 @@ const ProductList = ({ currentProducts }) => {
                         //   ? "crimson"
                         //   : "lightgray",
                         color: wishlistColor.some(
-                          (item) => item.product.id === p.id
+                          (item) => item.product._id === p._id
                         )
                           ? "crimson"
                           : "lightgray",
                       }}
-                      onClick={() => handleColorClick(p.id)}
+                      onClick={() => handleColorClick(p._id)}
                     />
                   </div>
                   <div className="image">
-                    <img src={p.productImages[0].name} alt="image"></img>
+                    <img src={p.photos[0]} alt={p.name}></img>
                   </div>
                   <div className="content">
-                    {/* <div className="rate">
-                      <Rating
-                        className="star"
-                        size="small"
-                        name="simple-controlled"
-                        value={value}
-                        onChange={(event, newValue) => {
-                          setValue(newValue);
-                        }}
-                      />
-                      ({p?.reviews})
-                    </div> */}
+                    
                     <div className="miniContainer">
                       <div className="dp">
                         <AccountCircleIcon/>

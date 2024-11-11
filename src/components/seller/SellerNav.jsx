@@ -19,7 +19,7 @@ const SellerNav = () => {
         <div className="right">
           <ul>
             <li>
-              <StyledLink to="/admin/dashboard">Home</StyledLink>
+              <StyledLink to="/seller">Home</StyledLink>
             </li>
             <li>
               <StyledLink

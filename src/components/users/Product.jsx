@@ -18,12 +18,12 @@ import toast, { Toaster } from "react-hot-toast";
 
 const Product = () => {
   const { id } = useParams();
-  console.log("id from param", id);
+  // console.log("id from param", id);
   const items = useSelector((state) =>
-    state.product.products.find((product) => product.id === id)
+    state.product.products.find((product) => product._id === id)
   );
 
-  console.log("item ", items);
+  // console.log("item ", items);
 
   // const {title, rating, brand, description, price,images} = singleproduct;
   const { name } = items || {};
@@ -32,7 +32,7 @@ const Product = () => {
 
   const navigate = useNavigate();
   const selectedProduct = useSelector((state) =>
-    state.product.products.find((product) => product.id === id)
+    state.product.products.find((product) => product._id === id)
   );
   console.log(selectedProduct);
   const dispatch = useDispatch();

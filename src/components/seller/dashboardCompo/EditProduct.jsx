@@ -1,89 +1,86 @@
-import { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Spinner from "../../common/Spinner";
-import axiosInstance from "../../newUpdateComponents/axiosInstance"; // Update with the correct import path
+import axiosInstance from "../../newUpdateComponents/axiosInstance";
 
-const initialState = {
-  name: "",
-  price: "",
-  description: "",
-  inStock: true, // Set default value to true
-  category: "",
-};
 
-const AddProduct = ({ categories, onClose , fetchDetails}) => {
-  console.log("new ",categories)
+const EditProduct = ({ product, categories, onClose, fetchDetails }) => {
   const [productImages, setProductImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Product name is required"),
-    price: Yup.number()
-      .required("Price is required")
-      .positive("Price must be positive"),
-    description: Yup.string().required("Description is required"),
-    category: Yup.string().required("Category is required"),
+  const [productData, setProductData] = useState({
+    name: product.name || "",
+    price: product.price || "",
+    description: product.description || "",
+    stock: product.stock || true,
+    category: product.category._id || "",
   });
 
-  const formik = useFormik({
-    initialValues: initialState,
-    validationSchema: validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("price", values.price);
-      formData.append("description", values.description);
-      formData.append("inStock", values.inStock); // Add inStock
-      formData.append("category", values.category);
+  useEffect(() => {
+    setProductData({
+      name: product.name || "",
+      price: product.price || "",
+      description: product.description || "",
+      stock: product.stock || true,
+      category: product.category._id || "",
+    });
+  }, [product]);
 
-      for (let i = 0; i < productImages.length; i++) {
-        formData.append("photos", productImages[i]);
-      }
-      console.log("formData: ", formData)
-      try {
-        const response = await axiosInstance.post(
-          "/api/seller/product",
-          formData
-        );
-        fetchDetails()
-        console.log("Product added successfully:", response.data);
-        formik.resetForm();
-        setProductImages([]);
-        onClose();
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    console.log("priductdata: ", productData)
 
-      } catch (error) {
-        console.error("Error adding product:", error.response?.data?.msg || error.message);
-      } finally {
-        setIsLoading(false);
-        setSubmitting(false);
-      }
-    },
-  });
-// useEffect(() => {
-//     console.log("categories: ",  categories); // Check if categories are received correctly
-//   }, [categories]);
+    // Create FormData object to handle file uploads
+    const formData = new FormData();
+    formData.append("name", productData.name);
+    formData.append("price", productData.price);
+    formData.append("description", productData.description);
+    formData.append("stock", productData.stock);
+    formData.append("category", productData.category);
+
+    // Append each image in productImages to formData
+    for (let i = 0; i < productImages.length; i++) {
+      formData.append("photos", productImages[i]); // 'photos' is the key expected by the backend
+    }
+
+    try {
+      const response = await axiosInstance.put(
+        `/api/seller/product/${product._id}`,
+        formData
+      );
+
+      console.log("Updated Product:", response.data);
+      fetchDetails();
+      setIsLoading(false);
+      onClose();
+    } catch (error) {
+      console.error(
+        "Error updating product:",
+        error.response?.data?.msg || error.message
+      );
+      setIsLoading(false);
+      // Handle error (e.g., show error message)
+    }
+  };
+  console.log("object: ", productData)
+
   return (
     <Container>
       <FormSection>
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Add Product
+          Edit Product
         </h2>
-        <form className="space-y-6" onSubmit={formik.handleSubmit}>
+        <form className="space-y-6" onSubmit={handleFormSubmit}>
           <InputContainer>
             <Label>Product Name</Label>
             <TextInput
               type="text"
               required
-              name="name"
-              onChange={(e) => formik.setFieldValue("name", e.target.value)}
-              value={formik.values.name}
+              value={productData.name}
+              onChange={(e) =>
+                setProductData({ ...productData, name: e.target.value })
+              }
             />
-            {formik.touched.name && formik.errors.name ? (
-              <Error>{formik.errors.name}</Error>
-            ) : null}
           </InputContainer>
 
           <InputContainer>
@@ -91,42 +88,31 @@ const AddProduct = ({ categories, onClose , fetchDetails}) => {
             <TextInput
               type="number"
               required
-              name="price"
-              onChange={(e) => formik.setFieldValue("price", e.target.value)}
-              value={formik.values.price}
+              value={productData.price}
+              onChange={(e) =>
+                setProductData({ ...productData, price: e.target.value })
+              }
             />
-            {formik.touched.price && formik.errors.price ? (
-              <Error>{formik.errors.price}</Error>
-            ) : null}
           </InputContainer>
 
           <InputContainer>
             <Label>Product Description</Label>
             <Textarea
               required
-              name="description"
-              onChange={(e) => formik.setFieldValue("description", e.target.value)}
-              value={formik.values.description}
+              value={productData.description}
+              onChange={(e) =>
+                setProductData({ ...productData, description: e.target.value })
+              }
             />
-            {formik.touched.description && formik.errors.description ? (
-              <Error>{formik.errors.description}</Error>
-            ) : null}
           </InputContainer>
 
           <InputContainer>
             <Label>Product Category</Label>
             <Select
-              name="category"
-              onChange={(e) => {
-                const selectedCategory = categories.find(
-                  (cat) => cat._id === e.target.value
-                );
-                formik.setFieldValue(
-                  "category",
-                  selectedCategory ? selectedCategory._id : ""
-                );
-              }}
-              value={formik.values.category}
+              value={productData.category}
+              onChange={(e) =>
+                setProductData({ ...productData, category: e.target.value })
+              }
             >
               <option value="" disabled>
                 Select a category
@@ -137,15 +123,10 @@ const AddProduct = ({ categories, onClose , fetchDetails}) => {
                 </option>
               ))}
             </Select>
-            {formik.touched.category && formik.errors.category ? (
-              <Error>{formik.errors.category}</Error>
-            ) : null}
           </InputContainer>
 
           <InputContainer>
-            <Button type="submit" disabled={isLoading || formik.isSubmitting}>
-              Add Product
-            </Button>
+            <Button type="submit">Update Product</Button>
           </InputContainer>
           {isLoading && (
             <div className="mt-4">
@@ -167,18 +148,24 @@ const AddProduct = ({ categories, onClose , fetchDetails}) => {
           onChange={(e) => setProductImages(Array.from(e.target.files))}
           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         />
+        <div className="mt-4">
+          {productImages.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold">Selected Images:</h3>
+              <ul className="list-disc pl-5">
+                {productImages.map((image, index) => (
+                  <li key={index}>{image.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </ImageUploadSection>
     </Container>
   );
 };
 
-export default AddProduct;
-
-// Styled components
-const Error = styled.div`
-  color: red; /* Error message color */
-  font-size: 0.875rem; /* Equivalent to text-sm */
-`;
+export default EditProduct;
 
 const Container = styled.div`
   display: flex;
@@ -255,7 +242,8 @@ const Select = styled.select`
   border: none;
   padding: 0.375rem 0.5rem; /* Equivalent to py-1.5 */
   color: #1f2937; /* Equivalent to text-gray-900 */
-  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
   border: 1px solid #d1d5db; /* Equivalent to ring-gray-300 */
   transition: border-color 0.2s;
 
@@ -266,24 +254,24 @@ const Select = styled.select`
 `;
 
 const Button = styled.button`
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   justify-content: center;
-  align-items: center;
-  padding: 0.5rem 1rem; /* Equivalent to px-4 py-2 */
   border-radius: 0.375rem; /* Equivalent to rounded-md */
-  border: none;
-  background-color: #2563eb; /* Equivalent to bg-blue-600 */
-  color: #ffffff; /* Equivalent to text-white */
+  background-color: #4f46e5; /* Equivalent to bg-indigo-600 */
+  padding: 0.375rem 0.75rem; /* Equivalent to px-3 py-1.5 */
+  font-size: 0.875rem; /* Equivalent to text-sm */
   font-weight: 600; /* Equivalent to font-semibold */
-  cursor: pointer;
+  color: #fff; /* Equivalent to text-white */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: background-color 0.2s;
 
-  &:disabled {
-    background-color: #93c5fd; /* Equivalent to bg-blue-300 */
-    cursor: not-allowed;
+  &:hover {
+    background-color: #4338ca; /* Equivalent to hover:bg-indigo-500 */
   }
 
-  &:hover:not(:disabled) {
-    background-color: #1d4ed8; /* Equivalent to bg-blue-700 */
+  &:focus-visible {
+    outline: 2px solid #6366f1; /* Equivalent to focus-visible:outline */
+    outline-offset: 2px; /* Equivalent to focus-visible:outline-offset-2 */
   }
 `;

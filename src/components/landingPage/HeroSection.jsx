@@ -69,7 +69,7 @@ const Wrapper = styled.section`
         color: #fbfefe;
     }
     .hero-image{
-        background: url('./images/theme9.jpg') center/cover;
+        background: url('https://res.cloudinary.com/dogqxtc6j/image/upload/v1730717059/uploads/ek2kam2asrecjps71jrt.jpg') center/cover;
         flex: 1.5;
         height: 70vh;
         

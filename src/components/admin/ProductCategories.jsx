@@ -1,19 +1,11 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import AddCategoryModal from "./AddCategoryModal";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { deleteCategory } from "../../apiCalls/admin/deleteCategory";
-import { getAllCategoriesFromBackend } from "../../apiCalls/admin/getAllCategoriesFromBackend";
+import axiosInstance from "../newUpdateComponents/axiosInstance";
 
 const ProductCategories = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const token = useSelector((store) => store.auth.token);
-  // const [categories, setCategories] = useState([]);
-
-  const categories = useSelector((store) => store.auth.productCategory);
-  const [mainCategoies, setMainCategories] = useState(new Map());
-  const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState(null); // Track the category being edited
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -21,52 +13,80 @@ const ProductCategories = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setCurrentCategory(null); // Reset after closing modal
   };
 
-  const handleCategoryDelete = (id) => {
-    console.log("delete with id " + id);
-    deleteCategory(token, id);
-    const c = categories.filter((c) => c.id != id);
-    // setCategories(c);
+  const handleCategoryDelete = async (id) => {
+    try {
+      await axiosInstance.delete(`/api/admin/category/${id}`);
+      fetchCategory(); // Refresh categories after deletion
+    } catch (error) {
+      console.log("Error deleting category: ", error.response?.data?.msg || error.message);
+    }
   };
 
-  const handleAddCategory = (categoryName) => {
-    // Here you can perform actions like adding the category to your state or database
-    setIsModalOpen(false); // Close the modal after submission
+  // Add Category
+  const handleAddCategory = async (categoryName) => {
+    try {
+      await axiosInstance.post("/api/admin/category", { name: categoryName });
+      fetchCategory(); // Refresh categories after adding
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("Error adding category: ", error.response?.data?.msg || error.message);
+    }
+  };
+
+  // Edit Category
+  const handleEditCategory = async (categoryName) => {
+    if (!currentCategory) return;
+    try {
+      await axiosInstance.put(`/api/admin/category/${currentCategory._id}`, { name: categoryName });
+      fetchCategory(); // Refresh categories after editing
+      setIsModalOpen(false);
+      setCurrentCategory(null);
+    } catch (error) {
+      console.log("Error editing category: ", error.response?.data?.msg || error.message);
+    }
+  };
+
+  // Prepare category for editing
+  const initiateEditCategory = (category) => {
+    setCurrentCategory(category);
+    handleOpenModal();
+  };
+
+  const fetchCategory = async () => {
+    try {
+      const response = await axiosInstance.get("/api/admin/category");
+      setCategories(response.data);
+    } catch (error) {
+      console.log("Error fetching categories: ", error.response?.data?.msg || error.message);
+    }
   };
 
   useEffect(() => {
-    console.log("use effect called with token +", token);
-    getAllCategoriesFromBackend(dispatch);
+    fetchCategory();
   }, []);
 
   return (
-    <div className="flex border-2 justify-center  border-green-400">
+    <div className="flex mt-2 pt-4  justify-center ">
       <div className="border-2 w-[20%] text-center h-28 mx-4">
-        <div
-          className="p-2 bg-slate-300 m-1 cursor-pointer font-bold"
-          onClick={() => {
-            // getAllCategories(dispatch);
-          }}
-        >
-          {/* <h1>All Category</h1> */}
-          All Categories
-        </div>
-        <div className="p-2 bg-slate-300 m-1 ">
+        <AddCategoryModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={currentCategory ? handleEditCategory : handleAddCategory}
+          initialValue={currentCategory ? currentCategory.name : ""}
+        />
+        <div className="p-2 bg-slate-300 m-1">
           <button
             onClick={handleOpenModal}
-            className="w-full  font-bold py-2 px-4 rounded"
+            className="w-full font-bold py-2 px-4 rounded"
           >
             Add New Category
           </button>
-          <AddCategoryModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            onSubmit={handleAddCategory}
-          />
         </div>
       </div>
-      <div className="h-80 overflow-y-auto">
+      <div className="h-100 overflow-y-auto w-1/2">
         <table className="min-w-full">
           <thead>
             <tr>
@@ -79,52 +99,37 @@ const ProductCategories = () => {
             </tr>
           </thead>
           <tbody>
-            {categories.map((c) => (
+            {categories.length > 0 ? (
+              categories.map((c) => (
+                <tr key={c._id}>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    {c.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    <div className="flex items-center">
+                      <button
+                        className="mr-2 text-indigo-600 hover:text-indigo-900"
+                        onClick={() => initiateEditCategory(c)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleCategoryDelete(c._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {c.name}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="flex items-center">
-                    <button className="mr-2 text-indigo-600 hover:text-indigo-900">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM19 21a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2h7l2-2h4a2 2 0 012 2v14z"
-                        ></path>
-                      </svg>
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900"
-                      onClick={() => handleCategoryDelete(c.id)}
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
+                <td colSpan="2" className="px-6 py-4 text-center">
+                  No categories found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

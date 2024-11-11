@@ -9,12 +9,15 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import LogoutIcon from "@mui/icons-material/Logout";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-import { signout } from "../../reduxToolkit/features/authSlice";
+import { logout, signout } from "../../reduxToolkit/features/authSlice";
 
 const Header = () => {
   let totalQuantity = useSelector((state) => state.cart.cartTotalQuantity);
 
-  const { currentUser } = useSelector((store) => store.auth);
+  //latest-updates
+  const { isLoggedIn, user } = useSelector((store) => store.auth);
+  // console.log("user Status: ", isLoggedIn)
+  // console.log("user: ", user)
 
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,8 +32,8 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log("logout");
-    dispatch(signout());
+    // console.log("logout");
+    dispatch(logout(false));
     navigate("/");
   };
 
@@ -74,13 +77,13 @@ const Header = () => {
             <li>
               <StyledLink to="/products">Products</StyledLink>
             </li>
-            {Object.keys(currentUser).length === 0 && (
+            {Object.keys(isLoggedIn).length === 0 && (
               <li>
                 <StyledLink to="/seller/register">Become a Seller</StyledLink>
               </li>
             )}
 
-            {Object.keys(currentUser).length !== 0 ? (
+            {isLoggedIn ? (
               <div className="avatar">
                 <div
                   className="action"
@@ -144,7 +147,7 @@ const Header = () => {
               </div>
             ) : (
               <li>
-                <StyledLink to="/login">Login</StyledLink>
+                <StyledLink to="/users/login">Login</StyledLink>
               </li>
             )}
             <li>
@@ -178,7 +181,7 @@ const StyledLink = styled(Link)`
 `;
 const Wrapper = styled.section`
   height: 4.2rem;
-  background: linear-gradient(30deg, #a093d6a9,#5852a9a9, #113267bb);
+  background: linear-gradient(30deg, #a093d6a9, #5852a9a9, #113267bb);
   top: 0;
   bottom: 0;
   left: 0;

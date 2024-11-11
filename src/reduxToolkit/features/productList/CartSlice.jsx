@@ -12,7 +12,7 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
       if (itemIndex >= 0) {
         state.cartItems[itemIndex].cartQuantity += 1;
@@ -32,7 +32,7 @@ export const cartSlice = createSlice({
 
     removeFromCart: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload
+        (item) => item._id === action.payload
       );
       if (itemIndex >= 0) {
         state.cartItems.splice(itemIndex, 1);
@@ -53,7 +53,7 @@ export const cartSlice = createSlice({
         action.payload
       );
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload
+        (item) => item._id === action.payload
       );
       if (itemIndex >= 0) {
         console.log("Item found at index", itemIndex);
@@ -71,7 +71,7 @@ export const cartSlice = createSlice({
     },
     decreaseQuantity: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload
+        (item) => item._id === action.payload
       );
       if (itemIndex >= 0 && state.cartItems[itemIndex].cartQuantity > 1) {
         state.cartItems[itemIndex].cartQuantity -= 1;

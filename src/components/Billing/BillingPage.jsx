@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProductInCart } from "../../reduxToolkit/features/productList/BillingAddressSlice";
 import PaymentDetails from "./PaymentDetails";
 import { useNavigate } from "react-router-dom";
+import store from "../../reduxToolkit/app/store";
+import { postOrder } from "../../reduxToolkit/features/productList/ProductSlice";
+
 const BillingPage = () => {
   const [value, setValue] = useState("1");
   const [deliverClicked, setDeliverClicked] = useState(false);
@@ -38,29 +41,47 @@ const BillingPage = () => {
   }));
   // console.log(productsInCart)
 
+  //Extracting cartItems
+  const cartItems = useSelector(state => state.cart.cartItems)
+  const cartData = cartItems.map((item)=>(
+    {
+    productId: item._id,
+    quantity: item.cartQuantity,
+    amount:  item.price
+  }))
+  // console.log("cartData: ", cartData)
+  const cartTotalAmount = useSelector(state => state.cart.cartTotalAmount)
+  // console.log("cartTotalAmount: ", cartTotalAmount)
+
+
+
+  //ORDER
   const handleDeliverClick2 = () => {
-    // setValue("3");
-    // setVisited3(true); // Mark Tab 3 as visited when it's selected
-    // setDeliverClicked(true);
-    console.log("delivery");
-    productsInCart.map((p) =>
-      dispatch(
-        updateProductInCart({
-          productId: p.productId,
-          quantity: p.cartQuantity,
-        })
-      )
-    );
+    const orderData = {
+      products: cartData,
+      totalAmount: cartTotalAmount,
+    }
+    dispatch(postOrder(orderData))
     setValue("3");
     setVisited3(true); // Mark Tab 3 as visited when it's selected
 
+    
+    // productsInCart.map((p) =>
+    //   dispatch(
+    //     updateProductInCart({
+    //       productId: p.productId,
+    //       quantity: p.cartQuantity,
+    //     })
+    //   )
+    // );
+
     //if payment mode is cod direct hit order api
     //if payment mode online then first hit backend to create a payement with razorpay
-    const paymentData = {
-      amount: 123,
-    };
+    // const paymentData = {
+    //   amount: 123,
+    // };
 
-    generatePaymentWithRazopay(paymentData, token, dispatch);
+    // generatePaymentWithRazopay(paymentData, token, dispatch);
   };
 
   return (

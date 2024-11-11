@@ -10,13 +10,17 @@ import { removeFromWishList } from "../../reduxToolkit/features/productList/Wish
 import Lottie from "react-lottie";
 import animationData from "./Animation - 1713385936637.json";
 import { addToCart } from "../../reduxToolkit/features/productList/CartSlice";
+import store from "../../reduxToolkit/app/store";
 
 const WishList = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   // const [value, setValue] = useState(2);
   const [modalOpen, setModalOpen] = useState(false);
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  // console.log("wishlist: ", wishlistItems)
   const dispatch = useDispatch();
+
+  // console.log("cart store: ", store.getState().cart.cartItems);
 
   const CustomModal = ({ isOpen, onCancel, onConfirm }) => {
     if (!isOpen) return null;
@@ -131,19 +135,19 @@ const WishList = () => {
             ) : (
               wishlistItems.map((item) => (
                 <NavLink
-                  key={item.product.id}
-                  to={`/product/${item.product.id}`}
+                  key={item.product._id}
+                  to={`/product/${item.product._id}`}
                   className="W-link"
                   onClick={handleClick}
                 >
-                  <div key={item.product.id} className="item">
+                  <div key={item.product._id} className="item">
                     <div
                       className="remove"
                       onClick={(e) => handlePreventClick(e)}
                     >
                       <CancelIcon
                         onClick={() => {
-                          setItemToDelete(item.product.id);
+                          setItemToDelete(item.product._id);
                           setModalOpen(true);
                         }}
                       />
@@ -156,7 +160,7 @@ const WishList = () => {
                     </div>
                     <div className="image">
                       <img
-                        src={item.product.productImages[0].name}
+                        src={item.product.photos[0]}
                         alt={item.product.name}
                       />
                     </div>
@@ -249,7 +253,7 @@ const Wrapper = styled.section`
   position: relative;
 `;
 const UpperSection = styled.div`
-  height: 150px;
+  height: 120px;
   border: 1px solid black;
   display: flex;
   justify-content: center;
@@ -277,6 +281,9 @@ const DownSection = styled.div`
   border: 1px solid black;
   padding: 1rem;
   min-height: 180px;
+   display: flex;
+    justify-content: center;
+    align-items: center;
 
   .empty {
     display: flex;
@@ -291,8 +298,12 @@ const DownSection = styled.div`
   }
   .container {
     /* border: 1px solid black; */
-    padding: 2rem 5rem;
-    margin: auto 8rem;
+    // padding: 2rem 5rem;
+    margin:  1rem;
+    // border: 1px solid green;
+    width: 80%;
+    display: flex;
+    justify-content: center;
   }
   .grid {
     display: grid;
@@ -309,6 +320,7 @@ const DownSection = styled.div`
     overflow: hidden;
     border-radius: 5%;
     position: relative;
+    padding: 10px;
   }
   .remove {
     border: 1px solid black;
@@ -337,6 +349,7 @@ const DownSection = styled.div`
     height: 100%;
     width: 100%;
     object-fit: cover;
+    border-radius: 10px;
   }
   .miniContainer {
     display: flex;
@@ -370,6 +383,9 @@ const DownSection = styled.div`
     width: 30%;
     margin-right: 2px;
     color: green;
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
     font-weight: bold;
     font-size: 16px;
   }

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Footer2 from "../common/Footer2";
@@ -14,51 +13,25 @@ import SellerNav from "./SellerNav";
 import { getAllCategoriesFromBackend } from "../../apiCalls/admin/getAllCategoriesFromBackend";
 
 const buttons = [
-  {
-    name: "Complete your profile",
-    type: "button",
-    id: "complete-profile",
-  },
-  ,
-  {
-    name: "Add Product",
-    type: "button",
-    id: "add-product",
-  },
-  {
-    name: "Orders",
-    type: "button",
-    id: "new-orders",
-  },
-  // {
-  //   name: "All Orders",
-  //   type: "button",
-  //   id: "all-orders",
-  // },
-  {
-    name: "Manage Products",
-    type: "button",
-    id: "manage-products",
-  },
+  { name: "Complete your profile", type: "button", id: "complete-profile" },
+  { name: "Add Product", type: "button", id: "add-product" },
+  { name: "Orders", type: "button", id: "new-orders" },
+  { name: "Manage Products", type: "button", id: "manage-products" },
 ];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const auth = useSelector((store) => store.auth);
-  const [btID, SetbtID] = useState();
-
-  const handleClick = (e) => {
-    SetbtID(e.target.id);
-  };
+  const [btID, setBtID] = useState("complete-profile");
   const [showMessage, setShowMessage] = useState(false);
-
+  
   const { currentUser } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (currentUser.name === null) {
-      console.log("use effect");
-      SetbtID("complete-profile");
-    } else if (currentUser.approved == false) {
+      setBtID("complete-profile");
+    } else if (!currentUser.approved) {
       setShowMessage(true);
     } else {
       setShowMessage(false);
@@ -67,120 +40,97 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAllCategoriesFromBackend(dispatch);
-  }, []);
+  }, [dispatch]);
+
+  const handleClick = (e) => {
+    setBtID(e.target.id);
+  };
 
   return (
-    // <Wrapper>
     <>
       <SellerNav />
       {showMessage ? (
-        <div
-          className="bg-gray-100 border border-gray-400 text-gray-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
-          <span className="block sm:inline">
-            Please wait until admin approved your request
-          </span>
-        </div>
+        <AlertMessage>
+          Please wait until admin approved your request
+        </AlertMessage>
       ) : (
         <div className="p-32 pt-8">
           <div className="con1">
-            <div className="">
-              {currentUser.approved == false
-                ? ""
-                : buttons.map((button, index) => {
-                    if (index != 0)
-                      return (
-                        <button
-                          className="p-2  bg-indigo-700 text-white m-3 rounded-md hover:bg-indigo-600"
-                          key={index}
-                          id={button.id}
-                          type={button.type}
-                          onClick={handleClick}
-                        >
-                          {button.name}
-                        </button>
-                      );
-                  })}
+            <div>
+              {currentUser.approved &&
+                buttons.map((button) => (
+                  <Button
+                    key={button.id}
+                    id={button.id}
+                    type={button.type}
+                    onClick={handleClick}
+                  >
+                    {button.name}
+                  </Button>
+                ))}
             </div>
             <VerticalLine />
             <div className="secondSec">
               {btID === "complete-profile" && <SellerRegistration />}
               {btID === "add-product" && <AddProduct />}
               {btID === "new-orders" && <NewOrders />}
+              {/* Uncomment when needed */}
               {/* {btID === "all-orders" && <ViewAllOrders />} */}
               {btID === "manage-products" && <ManageProducts />}
             </div>
           </div>
         </div>
       )}
-      <Footer2 className="" />
+      <Footer2 />
     </>
-
-    // </Wrapper>
   );
 };
 
 export default Dashboard;
 
+const AlertMessage = styled.div`
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #374151;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.5rem;
+  background-color: #4f46e5;
+  color: white;
+  margin: 0.75rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #4338ca;
+  }
+`;
+
 const Wrapper = styled.section`
-    overflow-y: scroll;
-    height: 98vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.100), rgba(0,0,0,0.4)),url('.public/images/nature.jpg');
-    background-size: cover;
-    background-position: center;
-    justify-content: center;
-    align-items: center;
-    .container{
-        height:1000px
-        background-color: white;
-       display:flex;
-        
-      }
+  overflow-y: scroll;
+  height: 98vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)), url('./public/images/nature.jpg');
+  background-size: cover;
+  background-position: center;
+  justify-content: center;
+  align-items: center;
 
-    .foo{
-        mergin-top: 80px;
-    }
+  .con1 {
+    height: 700px;
+    display: flex;
+  }
 
-    .con1{
-        height:700px;
-        display:flex;
-    }
-
-    .firstSec{
-       
-        width: 200px;
-        padding:20px;
-        margin-top:200px;
-    }
-
-    .secondSec{
-        
-        border: 1px solid black;
-        border-radius:10px;
-        padding:20px;
-        margin:30px;
-        width:1150px
-    }
-
-    button{
-        width: 100%;
-        height: 40px;
-        background-color: #18a021;
-        border: 1px solid #ccc;
-        color: white;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        transition: transform 0.5s;
-        cursor: pointer;
-    
-    }
-
-    button:hover{
-        background-color: black;
-        border-radius:7px;
-    }
-
+  .secondSec {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 30px;
+    width: 1150px;
+  }
 `;
 
 const VerticalLine = styled.div`
