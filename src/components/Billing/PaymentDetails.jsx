@@ -58,7 +58,7 @@ const PaymentDetails = () => {
     try {
       // Set up Razorpay payment options
       const options = {
-        key: import.meta.env.RAZORPAY_KEY_ID,
+        key: `${import.meta.env.RAZORPAY_KEY_ID}`,
         amount: cartTotalAmount * 100,  
         currency: 'INR',
         name: 'beihrazi',
