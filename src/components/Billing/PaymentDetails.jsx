@@ -4,9 +4,10 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-
+import { createOrder } from "../../apiCalls/users/createOrder";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { verifyPayment } from "../../reduxToolkit/features/productList/ProductSlice";
 
 
 
@@ -58,7 +59,7 @@ const PaymentDetails = () => {
     try {
       // Set up Razorpay payment options
       const options = {
-        key: `${import.meta.env.RAZORPAY_KEY_ID}`,
+        key: import.meta.env.RAZORPAY_KEY_ID,
         amount: cartTotalAmount * 100,  
         currency: 'INR',
         name: 'beihrazi',
