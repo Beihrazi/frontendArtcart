@@ -15,7 +15,7 @@ const OrderManagement = () => {
     try {
       const res = await axiosInstance.get("/api/seller/orders");
       console.log("Fetched orders: ", res.data);
-      setOrders(res.data.order); // Assuming the orders array is under res.data.order
+      setOrders(res.data.orders); // Assuming the orders array is under res.data.order
     } catch (error) {
       setError("Error fetching orders: " + error.message);
     } finally {
