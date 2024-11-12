@@ -50,11 +50,12 @@ export const updateBilling = createAsyncThunk(
     try {
       console.log("billing data: ", billingData)
       // Optimistically update the state
-      dispatch(updateBillingInfo(billingData));
+      
 
       // Make the API request to update the database
       const response = await axiosInstance.put('/api/users/personalDetail', billingData);
       console.log("update billing: ", response.data)
+      dispatch(updateBillingInfo(billingData));
       return response.data;
     } catch (error) {
       // Revert the state if the API request fails
