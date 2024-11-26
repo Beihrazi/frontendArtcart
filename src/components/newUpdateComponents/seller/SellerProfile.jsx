@@ -110,23 +110,38 @@ const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 300px;
+  width: 90%;
+  max-width: 400px;
   margin: 2rem auto;
   padding: 1.5rem;
   border-radius: 8px;
   background-color: #f7fafc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+    gap: 1.5rem;
+  }
 `;
 
 const StyledField = styled(Field)`
   padding: 0.5rem;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
+  font-size: 1rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.125rem;
+  }
 `;
 
 const StyledErrorMessage = styled(ErrorMessage)`
   color: #e53e3e;
   font-size: 0.875rem;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -138,6 +153,7 @@ const SubmitButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 1rem;
 
   &:hover {
     background-color: #2d3748;
@@ -147,4 +163,10 @@ const SubmitButton = styled.button`
     background-color: #a0aec0;
     cursor: not-allowed;
   }
+
+  @media (min-width: 768px) {
+    padding: 1rem;
+    font-size: 1.125rem;
+  }
 `;
+

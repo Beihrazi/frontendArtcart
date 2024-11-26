@@ -23,13 +23,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { searchAndFilter } from "../../reduxToolkit/features/productList/ProductSlice";
 import toast from "react-hot-toast";
 import { orderSuccess } from "../../reduxToolkit/features/authSlice";
-import store from "../../reduxToolkit/app/store";
+
 
 const Products = () => {
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const getCategories = useSelector((state)=>state.product.categories)
+  console.log("categories: ", getCategories)
   
   const product = useSelector((state) => state.product);
 
@@ -139,6 +140,8 @@ const Products = () => {
   //   dispatch(FeatureProducts)
   // },[])
 
+  //JSX part
+
   return (
     <Container>
       <ImageSection>
@@ -243,13 +246,7 @@ const Products = () => {
                   </RadioGroup>
                 </FormControl>
 
-                {/* {
-                  price.map((item, index) => (
-                    <List key={item.id}>
-                      <Button key={index} variant='outlined' color='success'>{item.range}</Button>
-                    </List>
-                  ))
-                } */}
+                
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -283,13 +280,11 @@ const StyledPagination = styled.div`
   align-items: center;
   font-weight: 500;
 `;
-const List = styled.div`
-  width: auto;
+
+const Container = styled.div`
   height: auto;
 `;
-const Container = styled.div`
-  height: 220vh;
-`;
+
 const ImageSection = styled.div`
   background-image: linear-gradient(
       to bottom,
@@ -313,19 +308,36 @@ const ImageSection = styled.div`
     text-align: center;
     font-weight: 600;
   }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 28px;
+      width: 70%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 20px;
+      width: 90%;
+    }
+  }
 `;
+
 const FilterTop = styled.div`
-  height: 120px;
+  height: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
 
   .title {
     font-weight: 500;
     color: #020d17;
   }
+
   .filter-content {
-    height: 60px;
+    height: auto;
     width: 100%;
     background-image: linear-gradient(
       90deg,
@@ -334,13 +346,16 @@ const FilterTop = styled.div`
       rgba(125, 158, 209, 0.756)
     );
     display: flex;
-    justify-content: space-between;
-    padding: 0 15%;
+    flex-direction: column;
     align-items: center;
+    padding: 10px 15%;
+    gap: 10px;
   }
+
   .search {
     padding: 0 10px;
-    width: 20%;
+    width: 80%;
+    max-width: 400px;
     height: 40px;
     background-color: white;
     border: 1px solid black;
@@ -358,26 +373,38 @@ const FilterTop = styled.div`
       font-weight: 400;
     }
   }
+
   .sort {
-    width: 40%;
+    width: 80%;
+    max-width: 400px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
   }
+
   #dropdown {
     margin-left: 10px;
     height: 35px;
     border-radius: 10px;
-    width: 40%;
+    width: 100%;
+    max-width: 200px;
     padding-left: 10px;
     color: #070000;
   }
 `;
+
 const SubContainer = styled.div`
   padding: 10px 7%;
   display: flex;
+  flex-direction: row;
   gap: 50px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
+
 const LeftFilter = styled.div`
   background-image: linear-gradient(
     180deg,
@@ -394,6 +421,7 @@ const LeftFilter = styled.div`
   #form-left {
     padding-left: 15px;
   }
+
   h2 {
     text-transform: uppercase;
     text-align: center;
@@ -401,14 +429,8 @@ const LeftFilter = styled.div`
     font-weight: 550;
     font-size: 1.2rem;
   }
-  #category {
-    width: 100%;
-    display: flex;
-    font-size: 16px;
-    font-weight: 540;
-    text-transform: uppercase;
-    justify-content: space-between;
-  }
+
+  #category,
   #price {
     width: 100%;
     display: flex;
@@ -417,13 +439,39 @@ const LeftFilter = styled.div`
     text-transform: uppercase;
     justify-content: space-between;
   }
+
   Button {
     font-size: 14px;
     font-weight: 530;
     width: 90%;
     margin-left: 20px;
   }
+
+  @media (max-width: 768px) {
+    // border:1px solid black;
+     h2 {
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+    flex: 1;
+    padding: 10px;
+  }
+
+  @media (max-width: 480px) {
+    h2 {
+      font-size: 1rem;
+    }
+    Button {
+      font-size: 12px;
+    }
+  }
 `;
+
 const ProductContainer = styled.div`
   flex: 1.1;
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
 `;

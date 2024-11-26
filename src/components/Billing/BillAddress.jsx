@@ -666,108 +666,171 @@ const BillAddress = ({setNextButtonDisabled,nextButtonDisabled,handleDeliverClic
 };
 
 export default BillAddress;
+
 const Wrapper = styled.div`
   padding: 0.2rem 1rem;
 `;
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 4rem;
 
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
   .person-detail {
     border-radius: 15px;
     border: 1px solid lightgrey;
     padding: 2rem;
     margin-top: 1rem;
-  }
-  .address-bar {
-    /* border: 1px solid black; */
 
-    padding: 1rem 2rem;
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
   }
+
+  .address-bar {
+    padding: 1rem 2rem;
+
+    @media (max-width: 768px) {
+      padding: 0.5rem 1rem;
+    }
+  }
+
   #number {
     color: red;
     font-size: 1.2rem;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
+
   .count {
     font-size: 1.2rem;
     color: green;
     font-weight: 500;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
-  /* border: 1px solid black; */
+
   .billing-address {
     flex: 0.8;
-    /* border: 1px solid black; */
+
+    @media (max-width: 768px) {
+      flex: 1;
+    }
   }
+
   .price-detail {
     flex: 0.5;
     border: 1px solid black;
     width: 200px;
     height: 350px;
 
+    @media (max-width: 1024px) {
+      width: 180px;
+      height: 300px;
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: auto;
+    }
+
     h2 {
       text-align: center;
       border-bottom: 1px dotted grey;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
+
   .form-control {
     padding: 1rem;
+
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+    }
   }
-  .firstrow {
-    /* border: 1px solid black; */
-    height: 5.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .secondrow {
-    /* border: 1px solid black; */
+
+  .firstrow,
+  .secondrow,
+  .fourthrow,
+  .fifthrow {
     height: 5.4rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      height: auto;
+    }
   }
+
   .thirdrow {
     height: 8rem;
+
+    @media (max-width: 768px) {
+      height: auto;
+    }
   }
-  .fourthrow {
-    height: 5.4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .fifthrow {
-    margin-top: 10px;
-    height: 5.4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .pname {
-  }
-  .pcontact {
-  }
+
   .mini-container {
     padding: 0 2rem;
     align-items: center;
+
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
   }
+
   .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 4rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      height: auto;
+    }
   }
+
   .first {
     margin-top: 1rem;
+
+    @media (max-width: 768px) {
+      margin-top: 0.5rem;
+    }
   }
+
   .desc1 {
     display: flex;
     align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
   }
+
   .no {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+      justify-content: flex-start;
+    }
   }
 `;

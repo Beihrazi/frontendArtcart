@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AdminBody = () => {
   const navigate = useNavigate();
@@ -14,33 +14,35 @@ const AdminBody = () => {
     navigate("/admin/manageseller");
   };
 
-  // const handleClickCourier = () => {
-  //   console.log("clicked courier");
-  // };
-
   return (
-    <div className="border-2 border-green-600 flex justify-center items-center mt-5 h-full">
-      <div className="border-4 bg-gray-500 p-3 w-[30%] h-52 flex flex-col justify-center items-center">
-        <h2 className="font-semibold text-3xl">Manage Categories</h2>
-        <img
-          onClick={handleClickCategories}
-          className="w-32 h-32 rounded-full mt-4"
-          src="https://cdn.pixabay.com/photo/2021/10/11/23/49/app-6702045_1280.png"
-          alt="Manage Categories"
-        />
-      </div>
-      <div className="border-4 bg-gray-500 p-3 w-[30%] h-52 flex flex-col justify-center items-center">
-        <div className="font-semibold text-3xl" to={"/admin/manageseller"}>
-          ManageSeller
-        </div>
-        <img
-          onClick={handleClickSeller}
-          className="w-32 h-32 rounded-full mt-4"
-          src="https://blinkit.com/careers/sites/default/files/2021-12/local-desktop-masthead.png"
-          alt="Manage Seller"
-        />
-      </div>
-    </div>
+    <div className="flex flex-wrap justify-center items-center mt-5 h-80% gap-2 px-10">
+  {/* Manage Categories */}
+  <div className="border-4 bg-gray-500 p-6 w-full md:w-[45%] lg:w-[30%] flex flex-col justify-center items-center rounded-lg shadow-md">
+    <h2 className="font-semibold text-xl md:text-2xl lg:text-3xl text-center">
+      Manage Categories
+    </h2>
+    <img
+      onClick={handleClickCategories}
+      className="w-28 h-28 md:w-36 md:h-36 rounded-full mt-4 cursor-pointer hover:scale-105 transition-transform"
+      src="https://cdn.pixabay.com/photo/2021/10/11/23/49/app-6702045_1280.png"
+      alt="Manage Categories"
+    />
+  </div>
+
+  {/* Manage Sellers */}
+  <div className="border-4 bg-gray-500 p-6 w-full md:w-[45%] lg:w-[30%] flex flex-col justify-center items-center rounded-lg shadow-md">
+    <h2 className="font-semibold text-xl md:text-2xl lg:text-3xl text-center">
+      Manage Sellers
+    </h2>
+    <img
+      onClick={handleClickSeller}
+      className="w-28 h-28 md:w-36 md:h-36 rounded-full mt-4 cursor-pointer hover:scale-105 transition-transform"
+      src="https://blinkit.com/careers/sites/default/files/2021-12/local-desktop-masthead.png"
+      alt="Manage Seller"
+    />
+  </div>
+</div>
+
   );
 };
 

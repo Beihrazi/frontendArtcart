@@ -34,7 +34,7 @@ const SuggestedProducts = () => {
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -281,6 +281,11 @@ const Wrapper = styled.div`
     padding-left: 20%;
     margin-top: 1.5rem;
   }
+
+  @media (max-width: 768px){
+    width: 80%;
+    
+  }
 `;
 const Carousel = styled.div`
   padding: 1rem 4rem 4rem;
@@ -368,5 +373,11 @@ const Carousel = styled.div`
     object-fit: contain;
   }
   .feature-link {
+  }
+
+  @media (max-width: 768px){
+    h2{
+      font-size: 20px;
+    }
   }
 `;

@@ -1,5 +1,5 @@
 import { Avatar, Badge, Menu, MenuItem } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -7,17 +7,37 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-import { logout, signout } from "../../reduxToolkit/features/authSlice";
+import { logout } from "../../reduxToolkit/features/authSlice";
 
 const Header = () => {
   let totalQuantity = useSelector((state) => state.cart.cartTotalQuantity);
 
-  //latest-updates
-  const { isLoggedIn, user } = useSelector((store) => store.auth);
-  // console.log("user Status: ", isLoggedIn)
-  // console.log("user: ", user)
+  const [menu, setMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  const toggleRight = () => {
+    setMenu((prev) => !prev);
+  };
+
+  // Close the menu when clicking outside of the menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenu(false); // Close the menu
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const { isLoggedIn } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -32,7 +52,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // console.log("logout");
     dispatch(logout(false));
     navigate("/");
   };
@@ -43,10 +62,11 @@ const Header = () => {
       heroSection.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   return (
     <Wrapper>
       <div className="container">
-        <div className="left">
+        <div className="left" onClick={toggleRight}>
           <NavLink
             to="/"
             style={{
@@ -62,12 +82,8 @@ const Header = () => {
             </div>
           </NavLink>
         </div>
-        {/* <div className="center">
-          <div className="search-bar">
-            <input placeholder='Search' />
-          </div>
-        </div> */}
-        <div className="right">
+
+        <div ref={menuRef} className={`right ${menu ? "show" : ""}`}>
           <ul>
             <li>
               <StyledLink to="/" onClick={scrollToHero}>
@@ -165,6 +181,13 @@ const Header = () => {
             </li>
           </ul>
         </div>
+
+        {/* Hamburger Icon for Mobile */}
+        <div className="hamburger" onClick={toggleRight}>
+          <div className="bar"></div>
+          <div className="bar"></div>
+          <div className="bar"></div>
+        </div>
       </div>
     </Wrapper>
   );
@@ -179,8 +202,8 @@ const StyledLink = styled(Link)`
     color: #fae25c;
   }
 `;
+
 const Wrapper = styled.section`
-  height: 4.2rem;
   background: linear-gradient(30deg, #a093d6a9, #5852a9a9, #113267bb);
   top: 0;
   bottom: 0;
@@ -190,8 +213,8 @@ const Wrapper = styled.section`
   position: sticky;
 
   .container {
+    height: 10px;
     padding: 2.2rem;
-    height: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -229,27 +252,14 @@ const Wrapper = styled.section`
       font-size: 1.2rem;
     }
   }
-  /* .center{
-    flex: 1;
-    padding-bottom: 5px;
-  } */
-  /* 
-  input{
-      padding: 8px;
-      padding-left: 40px;
-      border-radius: 40px;
-      height: 25px;
-      width: 15rem;
-      border: none;
-      font-size: 16px;
-    } */
-
   .right {
     display: flex;
     flex: 1;
     justify-content: flex-end;
     align-items: flex-end;
     padding-right: 2rem;
+    box-sizing: border-box;
+    overflow: hidden;
     ul {
       display: flex;
       justify-content: space-between;
@@ -287,5 +297,70 @@ const Wrapper = styled.section`
   }
   .cart {
     text-transform: capitalize;
+  }
+
+  /* Hamburger Menu Styles for Mobile */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+    div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 4px;
+    }
+  }
+
+  @media (max-width: 768px) {
+
+    
+    .left {
+      flex: 0.5;
+      align-items: left;
+    }
+
+    .right {
+      position: absolute;
+      top: 10vh;
+      right: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      height: 90vh;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 3rem;
+      z-index: 1000;
+
+      &.show {
+        display: flex;
+      }
+
+      ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding: 0;
+        width: 100%;
+      }
+
+      li {
+        color: white;
+        cursor: pointer;
+        list-style: none;
+        text-transform: uppercase;
+        font-weight: 500;
+        padding: 0.6rem;
+        margin-left: 0;
+      }
+    }
+
+    .hamburger {
+      display: flex;
+    }
   }
 `;

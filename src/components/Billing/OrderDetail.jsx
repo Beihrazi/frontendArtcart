@@ -115,29 +115,48 @@ export default OrderDetail;
 const Wrapper = styled.div`
   padding: 1rem;
 `;
+
 const Container = styled.div`
   display: flex;
   gap: 4rem;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 1024px) {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
   .items {
   }
+
   .product-detail {
     margin-top: 1rem;
     border: 1px solid #a38787;
     border-radius: 5px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.26); 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.26);
     flex: 1;
     display: flex;
 
-    /* justify-content: space-evenly;
-        align-items: flex-start; */
+    @media (max-width: 768px) {
+      // flex-direction: column;
+      align-items: center;
+    }
 
     .item-image {
-      /* border: 1px solid black; */
       height: 160px;
       width: 190px;
       padding: 10px;
+
+      @media (max-width: 768px) {
+        height: 140px;
+        width: 160px;
+      }
 
       img {
         height: 100%;
@@ -145,22 +164,37 @@ const Container = styled.div`
         object-fit: cover;
       }
     }
+
     .description {
-      /* border: 1px solid black; */
       padding-left: 1rem;
       width: 65%;
+
+      @media (max-width: 768px) {
+        padding-left: 0;
+        width: 90%;
+        text-align: center;
+      }
 
       .title {
         padding-top: 1rem;
         font-weight: 550;
         font-size: 1rem;
+
+        @media (max-width: 768px) {
+          font-size: 0.9rem;
+        }
       }
+
       .itemPrice {
         color: #24a00b;
         margin-top: 1rem;
         display: flex;
         justify-content: flex-start;
         align-items: center;
+
+        @media (max-width: 768px) {
+          justify-content: center;
+        }
       }
     }
   }
@@ -168,24 +202,44 @@ const Container = styled.div`
   #number {
     color: red;
     font-size: 1.2rem;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
+
   .count {
     font-size: 1.2rem;
     color: green;
     font-weight: 500;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 
-  /* border: 1px solid black; */
   .address {
     flex: 1;
     border: 1px solid black;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      margin-top: 1rem;
+    }
   }
+
   .price-detail {
     flex: 0.5;
     border: 1px solid #ac8383;
     width: 200px;
     height: 350px;
     border-radius: 15px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
 
     h2 {
       text-align: center;
@@ -194,32 +248,65 @@ const Container = styled.div`
       font-weight: 550;
       text-transform: uppercase;
       color: #52240f;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
+
   .mini-container {
     padding: 0 2rem;
     align-items: center;
+
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
   }
+
   .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 4rem;
+
+    @media (max-width: 768px) {
+      padding: 12px;
+      align-items: flex-start;
+      height: auto;
+    }
   }
+
   .first {
     margin-top: 1rem;
+
+    @media (max-width: 768px) {
+      margin-top: 0.5rem;
+    }
   }
+
   .desc1 {
     padding-top: 1rem;
     display: flex;
     align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
+
   .no {
     margin-left: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+      justify-content: flex-start;
+    }
   }
+
   .total {
     border-top: 1px dotted black;
   }

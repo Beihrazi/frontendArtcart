@@ -5,14 +5,11 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { Rating } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { FavoriteOutlined } from "@mui/icons-material";
-import toast, { Toaster, useToaster } from "react-hot-toast";
+import toast, { Toaster} from "react-hot-toast";
 import {
   addToWishList,
   clearToastMessage,
-  removeFromWishList,
 } from "../../reduxToolkit/features/productList/WishListSlice";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
@@ -36,9 +33,9 @@ const FeatureProducts = () => {
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
         },
@@ -52,7 +49,7 @@ const FeatureProducts = () => {
       },
     ],
   };
-  const [value, setValue] = useState(2);
+  
 
   //latest updates
   const featuredProducts = useSelector((state) => state.product.products);
@@ -84,9 +81,8 @@ const FeatureProducts = () => {
   const handleFavoriteClick = (_id, event) => {
     event.preventDefault();
     event.stopPropagation();
-
     const product = featuredProducts.find((product) => product._id === _id);
-    console.log("wishlist_Id: ", product)
+    // console.log("wishlist_Id: ", product)
     dispatch(addToWishList({ product, quantity: 1 }));
   };
 
@@ -386,5 +382,11 @@ const Carousel = styled.div`
     object-fit: contain;
   }
   .feature-link {
+  }
+
+  @media (max-width: 768px){
+    h2{
+      font-size: 28px;
+    }
   }
 `;

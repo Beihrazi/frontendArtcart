@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { CircularProgress, Pagination, Rating } from "@mui/material";
-import { Link, NavLink } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { NavLink } from "react-router-dom";
 import { FavoriteOutlined } from "@mui/icons-material";
 import {
   addToWishList,
@@ -11,11 +11,10 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { fetchCategories } from "../../reduxToolkit/features/productList/ProductSlice";
-import store from "../../reduxToolkit/app/store";
+
 
 const ProductList = ({ currentProducts }) => {
-  const [value, setValue] = useState(2);
+  
   const selectedProducts = useSelector((state) => state.product.products);
   const product = useSelector((state) => state.product);
   // console.log(product);
@@ -26,7 +25,6 @@ const ProductList = ({ currentProducts }) => {
   // console.log("category store: ", store.getState().product.categories)
   
   useEffect(() => {
-    dispatch(fetchCategories())
     if (toastMessage) {
       if (toastMessage.type === "added") {
         toast.success(toastMessage.text);
@@ -39,11 +37,11 @@ const ProductList = ({ currentProducts }) => {
     // Clear toast message on unmount
   }, [dispatch, toastMessage]);
 
-  const handleFavoriteClick = (id, event) => {
+  const handleFavoriteClick = (_id, event) => {
     event.preventDefault();
     event.stopPropagation();
     //finding individual item
-    const product = selectedProducts.find((product) => product._id === id);
+    const product = selectedProducts.find((product) => product._id === _id);
     dispatch(addToWishList({ product, quantity: 1 }));
   };
 
@@ -51,8 +49,6 @@ const ProductList = ({ currentProducts }) => {
   const [clickedProducts, setClickedProducts] = useState([]);
 
   const handleColorClick = (productId) => {
-    // console.log("wish list", productId);
-
     const newClickedProducts = [...clickedProducts]; // Create a copy
     const productIndex = newClickedProducts.indexOf(productId);
 
@@ -96,9 +92,6 @@ const ProductList = ({ currentProducts }) => {
                   >
                     <FavoriteOutlined
                       style={{
-                        // color: clickedProducts.includes(p.id)
-                        //   ? "crimson"
-                        //   : "lightgray",
                         color: wishlistColor.some(
                           (item) => item.product._id === p._id
                         )
@@ -151,14 +144,35 @@ export default ProductList;
 const Container = styled.section`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  height: 100%;
+  height: 80%;
   grid-gap: 20px 10px;
+  margin-top: 18px;
 
   .grid-item-link {
     text-decoration: none;
     color: black;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+    
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
+    // border:1px solid black;
+    .grid-item-link{
+        // border:1px solid black;
+        display:flex;
+        justify-content:center;
+    }
   }
 `;
+
 const GridItem = styled.div`
   background-image: linear-gradient(
     to top,
@@ -166,6 +180,7 @@ const GridItem = styled.div`
     rgba(249, 238, 220, 0.84),
     rgba(247, 236, 220, 0.674)
   );
+  
   border: 1px solid #8f7f68;
   border-radius: 15px;
   height: 330px;
@@ -251,4 +266,75 @@ const GridItem = styled.div`
     text-transform: uppercase;
     color: #82400b;
   }
+
+  @media (max-width: 1024px) {
+    height: 280px;
+    width: 90%;
+    .title {
+      font-size: 11px;
+    }
+    .price {
+      font-size: 13px;
+    }
+    #author, #category {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    
+    height: 350px;
+    width: 70%;
+    .title {
+      font-size: 10px;
+    }
+    .price {
+      font-size: 12px;
+    }
+    #author, #category {
+      font-size: 11px;
+    }
+  img {
+    height: 90%;
+  }
+  .title {
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .price {
+    width: 30%;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  #author {
+    font-weight: 500;
+    font-size: 13px;
+  }
+  #category {
+    font-weight: 600;
+    padding-left: 20%;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #82400b;
+  }
+
+  }
+
+  @media (max-width: 480px) {
+    height: auto;
+    width: 100%;
+    .wish {
+      height: 1.8rem;
+      width: 1.8rem;
+    }
+    .price {
+      font-size: 11px;
+    }
+    #author, #category {
+      font-size: 10px;
+      padding-left: 10%;
+    }
+  }
 `;
+

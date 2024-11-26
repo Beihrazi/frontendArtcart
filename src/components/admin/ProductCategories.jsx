@@ -69,8 +69,9 @@ const ProductCategories = () => {
   }, []);
 
   return (
-    <div className="flex mt-2 pt-4  justify-center ">
-      <div className="border-2 w-[20%] text-center h-28 mx-4">
+    <div className="flex flex-col md:flex-row mt-2 pt-4 justify-center gap-6 px-4">
+      {/* Add New Category Button */}
+      <div className="border-2 w-full md:w-[30%] text-center h-auto mx-4">
         <AddCategoryModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
@@ -86,29 +87,25 @@ const ProductCategories = () => {
           </button>
         </div>
       </div>
-      <div className="h-100 overflow-y-auto w-1/2">
-        <table className="min-w-full">
+
+      {/* Category Table */}
+      <div className="overflow-x-auto w-full md:w-[70%]">
+        <table className="min-w-full table-auto">
           <thead>
             <tr>
-              <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Category Name
-              </th>
-              <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
+              <th className="px-4 py-3 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+              <th className="px-4 py-3 bg-gray-100 text-left text-sm leading-4 font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody>
             {categories.length > 0 ? (
               categories.map((c) => (
                 <tr key={c._id}>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    {c.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="flex items-center">
+                  <td className="px-4 py-4 whitespace-no-wrap border-b border-gray-200">{c.name}</td>
+                  <td className="px-4 py-4 whitespace-no-wrap border-b border-gray-200">
+                    <div className="flex items-center space-x-4">
                       <button
-                        className="mr-2 text-indigo-600 hover:text-indigo-900"
+                        className="text-indigo-600 hover:text-indigo-900"
                         onClick={() => initiateEditCategory(c)}
                       >
                         Edit
@@ -125,9 +122,7 @@ const ProductCategories = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="2" className="px-6 py-4 text-center">
-                  No categories found
-                </td>
+                <td colSpan="2" className="px-4 py-4 text-center">No categories found</td>
               </tr>
             )}
           </tbody>

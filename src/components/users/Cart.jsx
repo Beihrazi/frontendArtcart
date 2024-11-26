@@ -1,10 +1,9 @@
 import { Button, TextField } from "@mui/material";
-import React from "react";
 import styled from "styled-components";
 import LockIcon from "@mui/icons-material/Lock";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import SingleCart from "./SingleCart";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import {NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -154,8 +153,14 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: black;
   font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
+
 const Wrapper = styled.section``;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -181,11 +186,38 @@ const Container = styled.div`
     .quantity {
       color: #ff4800;
     }
+
+    @media (max-width: 768px) {
+      
+      flex-direction: column;
+      left: -5rem;
+      right: 1rem;
+      top: 5rem;
+      text-align: center;
+      border:none;
+      
+      #items {
+        font-size: 1rem;
+        position: relative;
+        top: .2rem;
+        left: 8.5rem;
+      }
+        
+    }
   }
 
-  //cart-single
   .cart-details {
     flex: 0.7;
+
+    @media (max-width: 768px) {
+      flex: 1;
+      width: 100%;
+      .cart{
+        display:flex;
+        justify-content:flex-start;
+        align-items:flex-start;
+      }
+    }
   }
 
   #title {
@@ -194,30 +226,51 @@ const Container = styled.div`
     font-weight: 550;
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
       "Lucida Sans", Arial, sans-serif;
+
+    @media (max-width: 768px) {
+      text-align: center;
+      font-size: 1.2rem;
+    }
   }
+
   .my-cart {
-    /* border: 1px solid black; */
     height: 8rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+      height: auto;
+      padding: 1rem;
+    }
   }
+
   .cart-content {
     margin: 10px auto;
     width: 80%;
-    /* border: 1px solid black; */
     display: flex;
     justify-content: space-between;
     padding: 10px;
     gap: 7rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      width: 90%;
+      gap: 1rem;
+    }
   }
 
   .checkout-detail {
-    /* border: 1px solid black; */
     flex: 0.3;
     margin-top: 10px;
+
+    @media (max-width: 768px) {
+      flex: 1;
+      margin-top: 1rem;
+    }
   }
+
   .red {
     color: #ef3c3c;
   }
@@ -227,24 +280,44 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     font-weight: 550;
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
   }
+
   #coupon {
     font-weight: 550;
     text-transform: uppercase;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
   }
+
   .cart {
-    /* border: 1px solid black; */
     height: 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 768px) {
+      padding: 10px;
+      height: auto;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
   }
+
   .discount {
     margin-top: 1rem;
   }
+
   .border-bot {
     border-bottom: 1px solid black;
   }
+
   .total-cost {
     margin: 10px 0;
     padding: 0 10px;
@@ -258,6 +331,10 @@ const Container = styled.div`
       font-size: 1.2rem;
       font-weight: 550;
       color: #1a0f02;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
 `;

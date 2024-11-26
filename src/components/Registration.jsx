@@ -104,7 +104,9 @@ const Registration = () => {
 export default Registration;
 
 const Wrapper = styled.div`
-  height: 97vh;
+  
+  height: auto;
+  min-height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.365), rgba(0, 0, 0, 0.5)),
     url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841799/nature_fn4vu8.jpg");
   background-size: cover;
@@ -114,34 +116,45 @@ const Wrapper = styled.div`
   align-items: center;
 
   .container {
-    width: 900px;
-    height: 680px;
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    min-height: 670px;
     background-color: white;
     display: flex;
+    flex-direction: row;
   }
+
   .imageSection {
     flex: 1;
     background-image: linear-gradient(rgba(0, 0, 0, 0.486), rgba(0, 0, 0, 0.42)),
-      url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841993/flower_z0ewcs.jpg");
+      url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841842/ship_a2o3tq.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: center;
   }
+
   .content {
     margin: 30px;
     height: 60%;
   }
+
   h1 {
     width: 80%;
     font-size: 40px;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1.2;
     color: #fff;
     margin-bottom: 30px;
   }
+
   #content-p {
     font-size: 20px;
     color: #fdfdfde5;
   }
+
   .registrationSection {
     background: #f8f8fef3;
     flex: 1;
@@ -149,39 +162,47 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 60px 0px;
+    border-radius: 1px solid black;
   }
 
   .title {
+    color: #320808;
     font-weight: bold;
     font-size: 35px;
-    margin-bottom: 40px;
   }
+
   label {
     font-size: 18px;
     display: block;
     margin-bottom: 10px;
     font-weight: 500;
   }
+
   input[type="password"],
   input[type="email"] {
     display: block;
     width: 300px;
     padding: 6px 12px;
     font-size: 16px;
+    line-height: 1.4;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
   p {
     font-size: 18px;
+    margin-bottom: 20px;
   }
+
   .form-control {
     margin-bottom: 20px;
   }
+
   button {
     width: 100%;
     height: 40px;
-    background-color: #2c5c66;
+    background-color: #18a021;
     border: 1px solid #ccc;
     color: white;
     text-transform: uppercase;
@@ -189,11 +210,75 @@ const Wrapper = styled.div`
   }
 
   .log-in {
-    font-weight: 3000;
-    color: #24da24;
+    font-weight: bold;
+    color: #26c029;
     text-decoration: none;
   }
+
   .error {
     color: red;
+  }
+
+  // Responsive styles
+  @media (max-width: 1024px) {
+    .container {
+      width: 80%;
+      // min-width: 400px;
+      flex-direction: column;
+      height: auto;
+      min-height: 400px;
+    }
+
+    .imageSection {
+      height: 300px;
+    }
+
+    .registrationSection {
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    #content-p {
+      font-size: 18px;
+    }
+
+    input[type="password"],
+    input[type="email"] {
+      width: 90%;
+    }
+
+    button {
+      width: 90%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .container {
+      width: 95%;
+      max-width: 400px;
+    }
+
+    #content-p {
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 20px;
+    }
+    .title {
+      font-size: 20px;
+      margin-bottom:10px;
+    }
+    p {
+      font-size: 16px;
+    }
+
+    input[type="password"],
+    input[type="email"],
+    button {
+      width: 100%;
+    }
   }
 `;

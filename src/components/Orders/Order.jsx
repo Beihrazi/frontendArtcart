@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { Button, TextField } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../newUpdateComponents/axiosInstance";
 
 const Order = () => {
-  // const [] = [
+  
   //   {
   //     orderId: "12345",
   //     courierName: "DHL",
@@ -181,7 +176,15 @@ export default Order;
 
 const Wrapper = styled.div`
   min-height: 60vh;
-  padding: 2rem 10rem;
+  padding: 2rem 5rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;
 
 const Container = styled.section`
@@ -189,6 +192,11 @@ const Container = styled.section`
   display: flex;
   gap: 4rem;
   min-height: 50vh;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack items vertically */
+    gap: 2rem;
+  }
 `;
 
 const Left = styled.div`
@@ -198,6 +206,12 @@ const Left = styled.div`
   padding-left: 2rem;
   display: flex;
   justify-content: flex-start;
+
+  @media (max-width: 768px) {
+  display:none;
+    flex: 1; /* Take full width */
+    padding-left: 1rem;
+  }
 `;
 
 const Right = styled.div`
@@ -211,56 +225,90 @@ const Right = styled.div`
     border-radius: 10px;
     margin-top: 1.5rem;
     padding: 10px;
+
+     @media (max-width: 768px) {
+     
+      // border:1px solid black;
+      margin: 0 25px 15px;
+    }
   }
   .pname {
     font-weight: 600;
     margin-bottom: 10px;
     font-size: 16px;
+
+   
   }
+
   .product-item {
-    display: flex; /* Set to flex so we can align items horizontally */
-    justify-content: space-between; /* Space between image, title, and status */
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 2rem;
-    align-items: center; /* Vertically center all items */
+    align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column; /* Stack items vertically */
+      align-items: flex-start;
+    }
   }
 
   .image {
     height: 120px;
     flex: 0.4;
+
     img {
       height: 100%;
       width: 100%;
       object-fit: cover;
     }
+
+    @media (max-width: 768px) {
+      height: 100px;
+    }
   }
 
   .courier {
     margin-top: 20px;
+
+    @media (max-width: 480px) {
+      margin-top: 10px;
+    }
   }
-  .cId {
-    color: green;
-  }
+
   .title {
     flex: 0.7;
     padding: 0.5rem 1rem;
     display: flex;
-    flex-direction: column; /* Stack the title info vertically */
+    flex-direction: column;
     font-size: 15px;
+
+    @media (max-width: 480px) {
+      font-size: 14px;
+    }
   }
 
   .status {
-    flex: 0.5; /* Adjust the size of status section */
+    flex: 0.5;
     border-left: 1px solid #079724;
     display: flex;
     flex-direction: column;
-
     padding-left: 15px;
-    justify-content: flex-start; /* Align status at the top */
-    align-items: flex-start; /* Align the status to the right */
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    @media (max-width: 768px) {
+      border-left: none;
+      padding-left: 0;
+    }
   }
+
   .OId {
     font-weight: 600;
     font-size: 14px;
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+    }
   }
 
   .statusId {
@@ -273,10 +321,20 @@ const Right = styled.div`
     width: 120px;
     height: 25px;
     border-radius: 10px;
+
+    @media (max-width: 480px) {
+      width: 100px;
+      height: 20px;
+      font-size: 12px;
+    }
   }
 
   .date {
     margin-top: 1rem;
     font-size: 0.9rem;
+
+    @media (max-width: 480px) {
+      font-size: 0.8rem;
+    }
   }
 `;

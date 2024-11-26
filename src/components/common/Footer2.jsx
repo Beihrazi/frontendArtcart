@@ -249,78 +249,91 @@ const Wrapper = styled.section`
     height: 38vh;
     background-image: linear-gradient(45deg, #107286, #3dfadb);
     display: flex;
-   
     flex-direction: column;
-    
-`
+`;
+
 const StyledLink = styled(Link)`
     text-decoration: none;
-`
+`;
+
 const Container = styled.div`
     margin: 20px 20px 0;
     height: 30rem;
-    
     display: grid;
-    grid-template-columns: repeat(4,1fr);
-    
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 
-    .image{
+    .image {
         font-size: 20px;
         font-weight: 400;
     }
-    ul{
+
+    ul {
         list-style: none;
     }
-    
-   p{
-    font-weight: 400;
-   }
-    .logo-section{
-       
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        
-    }
-    .detail-section{
-      
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      
-    }
-    .social-section{
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
 
-    }
-    .connect-section{
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-
-       
+    p {
+        font-weight: 400;
     }
 
-`
+    .logo-section,
+    .detail-section,
+    .social-section,
+    .connect-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr); /* Reduce columns to 2 */
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr; /* Stack sections vertically */
+        gap: 20px; /* Increase spacing */
+        margin: 20px 10px; /* Adjust margins */
+
+        .image {
+            font-size: 18px; /* Slightly smaller font size */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .image {
+            font-size: 16px; /* Further reduce font size for small screens */
+        }
+
+        p {
+            font-size: 14px; /* Adjust paragraph font size */
+        }
+
+        ul {
+            padding-left: 10px; /* Add slight padding for better spacing */
+        }
+    }
+`;
+
 const Copyright = styled.p`
     text-align: center;
-   
     padding-bottom: 20px;
-   
-    #line{
+
+    #line {
         width: 90%;
         background-color: black;
         border: none;
         height: 1px;
     }
-   
-`
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        padding-bottom: 15px; 
+        text-align:center;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 14px; /* Reduce font size for extra small screens */
+    }
+`;

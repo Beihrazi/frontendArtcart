@@ -4,6 +4,7 @@ import Footer from "../../components/common/Footer";
 
 import { Outlet } from "react-router-dom";
 import AdminNav from "../../components/admin/AdminNav";
+import Footer2 from "../../components/common/Footer2";
 
 const AdminDashboard = () => {
   return (
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
         <Outlet />
       </div>
       <div className="border-3 border-blue-600">
-        <Footer />
+        <Footer2 />
       </div>
     </div>
   );

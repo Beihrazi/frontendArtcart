@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -32,29 +32,34 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   // Determine the role based on the current path
-  const currentRole = location.pathname.includes("seller") ? "seller" : 
-                      location.pathname.includes("admin") ? "admin" : 
-                      "users";
+  const currentRole = location.pathname.includes("seller")
+    ? "seller"
+    : location.pathname.includes("admin")
+    ? "admin"
+    : "users";
 
   // Handle form submission
   const onSubmit = async (values) => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/login`, values);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/users/login`,
+        values
+      );
       console.log("data: ", res.data);
       if (res.data.token) {
         localStorage.setItem("jwttoken", res.data.token);
-        
+
         // Redirect based on user role
         switch (res.data.role) {
           case "customer":
             navigate("/"); // Redirect customers to products
-            dispatch(login(true))
+            dispatch(login(true));
             break;
           case "seller":
             navigate("/seller");
-             // Redirect sellers to their dashboard
+            // Redirect sellers to their dashboard
             break;
           case "admin":
             navigate("/admin"); // Redirect admins to their dashboard
@@ -80,8 +85,9 @@ const Login = () => {
           <div className="content">
             <h1>Join the largest artwork community</h1>
             <p id="content-p">
-              Get free access to millions of pieces of art, showcase, promote, sell
-              & share your work with other members in the ArtWork Community.
+              Get free access to millions of pieces of art, showcase, promote,
+              sell & share your work with other members in the ArtWork
+              Community.
             </p>
           </div>
         </div>
@@ -126,7 +132,8 @@ const Login = () => {
 export default Login;
 
 const Wrapper = styled.div`
-  height: 97vh;
+  height: auto;
+  min-height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.365), rgba(0, 0, 0, 0.5)),
     url("https://res.cloudinary.com/dogqxtc6j/image/upload/v1730841799/nature_fn4vu8.jpg");
   background-size: cover;
@@ -136,11 +143,15 @@ const Wrapper = styled.div`
   align-items: center;
 
   .container {
-    width: 900px;
-    height: 670px;
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    min-height: 670px;
     background-color: white;
     display: flex;
+    flex-direction: row;
   }
+
   .imageSection {
     flex: 1;
     background-image: linear-gradient(rgba(0, 0, 0, 0.486), rgba(0, 0, 0, 0.42)),
@@ -150,10 +161,12 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
   }
+
   .content {
     margin: 30px;
     height: 60%;
   }
+
   h1 {
     width: 80%;
     font-size: 40px;
@@ -163,13 +176,14 @@ const Wrapper = styled.div`
     color: #fff;
     margin-bottom: 30px;
   }
+
   #content-p {
     font-size: 20px;
     color: #fdfdfde5;
   }
+
   .registrationSection {
     background: #f8f8fef3;
-
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -183,12 +197,14 @@ const Wrapper = styled.div`
     font-weight: bold;
     font-size: 35px;
   }
+
   label {
     font-size: 18px;
     display: block;
     margin-bottom: 10px;
     font-weight: 500;
   }
+
   input[type="password"],
   input[type="email"] {
     display: block;
@@ -200,13 +216,16 @@ const Wrapper = styled.div`
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
   p {
     font-size: 18px;
     margin-bottom: 20px;
   }
+
   .form-control {
     margin-bottom: 20px;
   }
+
   button {
     width: 100%;
     height: 40px;
@@ -222,7 +241,70 @@ const Wrapper = styled.div`
     color: #26c029;
     text-decoration: none;
   }
+
   .error {
     color: red;
+  }
+
+  // Responsive styles
+  @media (max-width: 1024px) {
+    .container {
+      width: 80%;
+      // min-width: 400px;
+      flex-direction: column;
+
+      max-height: 150px;
+    }
+
+    .imageSection {
+      height: 300px;
+    }
+
+    .registrationSection {
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    #content-p {
+      font-size: 18px;
+    }
+
+    input[type="password"],
+    input[type="email"] {
+      width: 90%;
+    }
+
+    button {
+      width: 90%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .container {
+      width: 95%;
+      max-width: 400px;
+    }
+
+    #content-p {
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 20px;
+    }
+    .title {
+      font-size: 25px;
+    }
+    p {
+      font-size: 16px;
+    }
+
+    input[type="password"],
+    input[type="email"],
+    button {
+      width: 100%;
+    }
   }
 `;

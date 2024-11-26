@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Header from "../common/Header";
 import HeroSection from "./HeroSection";
-import Footer from "../common/Footer";
 import SliderSection from "./SliderSection";
 import Categories from "./Categories";
 import { categories1 } from "./data";
@@ -9,12 +8,11 @@ import Services from "./Services";
 import Footer2 from "../common/Footer2";
 import FeaturedProducts from "./FeaturedProducts";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchProducts } from "../../reduxToolkit/features/productList/ProductSlice";
 
 const LandingPage = () => {
   const dispatch = useDispatch()
-  const {products} = useSelector((state) => state.product)
   // console.log("Products from slice: ", products)
   
   useEffect(()=>{

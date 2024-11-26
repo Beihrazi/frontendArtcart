@@ -179,14 +179,14 @@ const WishList = () => {
                       </div>
                       <span id="author">{item.product.category.name}</span>
                       <div className="rate">
-                        <Rating
+                        {/* <Rating
                           className="star"
                           size="small"
                           name="simple-controlled"
                           value={item.product?.reviews}
                           readOnly
                         />
-                        ({item.product?.reviews})
+                        ({item.product?.reviews}) */}
                       </div>
                       <Button
                         variant="contained"
@@ -259,6 +259,13 @@ const UpperSection = styled.div`
   justify-content: center;
   align-items: center;
 
+  @media (max-width: 768px) {
+    .wishlist {
+      // border: 1px solid black;
+      margin-top: 50px;
+    }
+  }
+
   .wishlist {
     /* border: 1px solid black; */
     display: flex;
@@ -281,9 +288,9 @@ const DownSection = styled.div`
   border: 1px solid black;
   padding: 1rem;
   min-height: 180px;
-   display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .empty {
     display: flex;
@@ -299,7 +306,7 @@ const DownSection = styled.div`
   .container {
     /* border: 1px solid black; */
     // padding: 2rem 5rem;
-    margin:  1rem;
+    margin: 1rem;
     // border: 1px solid green;
     width: 80%;
     display: flex;
@@ -378,16 +385,24 @@ const DownSection = styled.div`
   .title {
     font-weight: 540;
     font-size: 14px;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
   .price {
     width: 30%;
     margin-right: 2px;
     color: green;
-    display:flex;
+    display: flex;
     justify-content: space-around;
     align-items: center;
     font-weight: bold;
     font-size: 16px;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+    }
   }
   .price > img {
     padding-right: 5px;
@@ -403,8 +418,31 @@ const DownSection = styled.div`
     text-transform: lowercase;
     padding-left: 20%;
   }
-  .rate {
-    padding-top: 10px;
-    padding-left: 3rem;
+  // .rate {
+  //   padding-top: 10px;
+  //   padding-left: 3rem;
+
+  //   @media (max-width: 768px) {
+  //     .rate{
+  //       display: hidden;
+  //     }
+  //   }
+  // }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .item {
+      height: 300px;
+    }
+    .dp {
+      img {
+        height: 18px;
+        width: 18px;
+      }
+    }
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 `;

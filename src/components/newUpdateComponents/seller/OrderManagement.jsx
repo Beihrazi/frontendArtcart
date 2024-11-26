@@ -130,32 +130,55 @@ export default OrderManagement;
 
 
 const Container = styled.div`
-  padding: 20px 80px;
+  padding: 20px 40px; /* Adjust padding for smaller screens */
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    
+    // border:1px solid black;
+    padding: 0 10px;
+    margin-bottom:10px;
+  }
 `;
 
 const Title = styled.h2`
   margin-bottom: 30px;
   font-weight: 600;
-  text-Transform: uppercase;
-  font-size: 20px;
+  text-transform: uppercase;
+  font-size: 18px;
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 15px; 
+    margin: 10px;
+
+  }
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  font-size: 14px; /* Smaller font size for better readability on smaller screens */
+
+  @media (max-width: 768px) {
+    width:120px;
+    font-size: 10px; 
+  }
 `;
 
 const TableHeader = styled.th`
   border: 1px solid #ddd;
-  padding: 12px;
+  padding: 10px; /* Adjust padding for smaller screens */
   background-color: #007bff;
   color: white;
   text-align: left;
+
+  @media (max-width: 768px) {
+    padding: 12px; 
+  }
 `;
 
 const TableRow = styled.tr`
@@ -166,25 +189,46 @@ const TableRow = styled.tr`
 
 const TableCell = styled.td`
   border: 1px solid #ddd;
-  padding: 12px;
+  padding: 10px; /* Adjust padding for smaller screens */
   text-align: center;
+
+  @media (max-width: 768px) {
+    // border: 1px solid black;
+     padding: 6px; 
+   
+  }
 `;
 
 const StatusSelect = styled.select`
-  padding: 5px;
-  border-radius: 5px;
+    padding: 4px; /* Reduced padding */
+  font-size: 12px; /* Smaller font size for responsiveness */
+  border-radius: 4px; /* Slightly rounded corners */
   border: 1px solid #ccc;
+  width: 100%; /* Ensure it takes full width of its container */
+  max-width: 150px; /* Restrict maximum width to avoid overflow */
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 10px; 
+    max-width: 120px; 
+  }
 `;
 
 const ActionButton = styled.button`
-  padding: 5px 10px;
+  padding: 5px 8px; /* Adjust padding for smaller screens */
   margin: 0 5px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
   color: white;
   font-weight: bold;
+  font-size: 12px; /* Adjust font size for smaller screens */
   transition: background-color 0.3s;
+
+  @media (min-width: 768px) {
+    padding: 5px 10px; /* Restore padding for medium and larger screens */
+    font-size: 14px; /* Restore font size for medium and larger screens */
+  }
 
   ${({ action }) =>
     action === "save" &&

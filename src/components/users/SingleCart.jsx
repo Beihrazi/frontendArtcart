@@ -56,10 +56,12 @@ const SingleCart = ({ item }) => {
             <h4>Each</h4>
             <div className="amount">
               {" "}
-              <CurrencyRupeeIcon style={{
-                          color: 'black',
-                          height: "1.2rem"
-                        }} />
+              <CurrencyRupeeIcon
+                style={{
+                  color: "black",
+                  height: "1.2rem",
+                }}
+              />
               <span className="price">{item.price}</span>
             </div>
           </div>
@@ -84,10 +86,12 @@ const SingleCart = ({ item }) => {
           <div className="item total">
             <h4>Total</h4>
             <div className="currency">
-            <CurrencyRupeeIcon style={{
-                          color: 'black',
-                          height: "1.2rem"
-                        }} />
+              <CurrencyRupeeIcon
+                style={{
+                  color: "black",
+                  height: "1.2rem",
+                }}
+              />
               <p className="price">{item.price * item.cartQuantity}</p>
             </div>
           </div>
@@ -200,5 +204,33 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .quantity-holder {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    width: 40px;
+    border: 1px solid #796f6f;
+    margin: 0 10px;
+  }
+    h4 {
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .title {
+      font-size: 14px;
+    }
+    font-size: 14px;
+    .description {
+      #category {
+        font-size: 12px;
+      }
+        #catDetail{
+          font-size: 12px;
+        }
+    }
   }
 `;

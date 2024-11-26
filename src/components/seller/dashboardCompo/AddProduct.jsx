@@ -182,15 +182,30 @@ const Error = styled.div`
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column; /* Stack elements for smaller screens */
   justify-content: center;
   padding: 20px;
   max-width: 800px; /* Set a max width for the overall div */
   margin: 0 auto; /* Center the div */
+
+  @media (max-width: 768px) {
+    flex-direction: row; 
+    // max-width:400px;
+    // padding: 10px;
+    // border: 1px solid black;
+  }
 `;
 
 const FormSection = styled.div`
   flex: 1.5; /* Allocate more space to the form section */
-  margin-right: 20px;
+  margin-right: 0; /* Remove margin for small screens */
+  margin-bottom: 20px; /* Add spacing between sections for smaller screens */
+
+  @media (max-width: 768px) {
+    
+    padding: 0 10px;
+    margin: 0 20px;
+  }
 `;
 
 const ImageUploadSection = styled.div`
@@ -230,23 +245,7 @@ const TextInput = styled.input`
   }
 `;
 
-const Textarea = styled.textarea`
-  display: block;
-  width: 100%;
-  border-radius: 0.375rem; /* Equivalent to rounded-md */
-  border: none;
-  padding: 0.375rem 0.5rem; /* Equivalent to py-1.5 */
-  color: #1f2937; /* Equivalent to text-gray-900 */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  background-color: transparent;
-  border: 1px solid #d1d5db; /* Equivalent to ring-gray-300 */
-  transition: border-color 0.2s;
-
-  &:focus {
-    border-color: #6366f1; /* Equivalent to ring-indigo-600 */
-    outline: 2px solid #a5b4fc; /* Equivalent to focus:ring-2 and focus:ring-indigo-600 */
-  }
-`;
+const Textarea = styled(TextInput).attrs({ as: 'textarea' })``;
 
 const Select = styled.select`
   display: block;

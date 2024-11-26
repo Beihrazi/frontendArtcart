@@ -1,28 +1,25 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Header from "../../components/common/Header";
 import Footer2 from "../../components/common/Footer2";
 import Products from "../../components/users/Products";
+import { useDispatch} from "react-redux";
 
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import styled from "styled-components";
+import { fetchCategories } from "../../reduxToolkit/features/productList/ProductSlice";
 
-const ProductPage = ({ data }) => {
-  const dispatch = useDispatch();
-  const token = localStorage.getItem("jwttoken");
-  const navigate = useNavigate();
-  // const { currentUser } = useSelector((store) => store.auth);
+const ProductPage = () => {
+  const dispatch = useDispatch() 
+ 
   useEffect(() => {
-    // Scroll to the top when the component mounts
+    dispatch(fetchCategories())
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
 
-    // getCurrentUser(token, navigate, dispatch);
-    // getAllCategoriesFromBackend(dispatch);
-  }, []);
+
+  }, [dispatch]);
   return (
     <Wrapper>
       <Header />

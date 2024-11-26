@@ -143,24 +143,39 @@ export default ProductManagement;
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column; /* Default stack for small screens */
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    flex-direction: row; /* Row layout for medium and larger screens */
+  }
 `;
 
 const LeftSection = styled.div`
-  width: 30%;
+  width: 100%; /* Full width on small screens */
   padding: 10px 15px;
-  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd; /* Border at the bottom for small screens */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (min-width: 768px) {
+    width: 30%; /* Restore 30% width for larger screens */
+    border-right: 1px solid #ddd; /* Border on the right for larger screens */
+    border-bottom: none; /* Remove bottom border */
+  }
 `;
 
 const RightSection = styled.div`
-  width: 70%;
+  width: 100%; /* Full width on small screens */
   padding: 10px 15px;
+
+  @media (max-width: 768px) {
+  //  border: 1px solid black;
+  }
 `;
 
 const Button = styled.button`
@@ -172,9 +187,14 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s;
+  font-size: 1rem;
 
   &:hover {
     background-color: #0056b3;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.125rem; /* Larger font on medium and larger screens */
   }
 `;
 
@@ -182,6 +202,12 @@ const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  font-size: 0.9rem; 
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem; 
+    
+  }
 `;
 
 const TableHeader = styled.th`
@@ -202,6 +228,12 @@ const TableCell = styled.td`
   border: 1px solid #ddd;
   padding: 12px;
   text-align: center;
+  font-size: 0.85rem; 
+
+  @media (max-width: 768px) {
+    padding-right:8px;
+    
+  }
 `;
 
 const ActionButton = styled.button`
@@ -213,6 +245,12 @@ const ActionButton = styled.button`
   color: white;
   font-weight: bold;
   transition: background-color 0.3s;
+  font-size: 0.85rem; 
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem; 
+    
+  }
 
   ${({ action }) =>
     action === "edit" &&
