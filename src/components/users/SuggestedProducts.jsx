@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -12,7 +12,6 @@ import {
   addToWishList,
   clearToastMessage,
 } from "../../reduxToolkit/features/productList/WishListSlice";
-import Test from "./Test";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 const SuggestedProducts = () => {
@@ -375,8 +374,11 @@ const Carousel = styled.div`
   .feature-link {
   }
 
-  @media (max-width: 768px){
-    h2{
+   @media (max-width: 768px) and (min-width: 460px) {
+    .Flink {
+      margin-left: 2.5rem;
+    }
+       h2{
       font-size: 20px;
     }
   }

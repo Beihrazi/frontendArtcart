@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { FavoriteOutlined } from "@mui/icons-material";
-import toast, { Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import {
   addToWishList,
   clearToastMessage,
@@ -50,11 +50,10 @@ const FeatureProducts = () => {
       },
     ],
   };
-  
 
   //latest updates
   const featuredProducts = useSelector((state) => state.product.products);
-  console.log("featured products: ", featuredProducts)
+  console.log("featured products: ", featuredProducts);
 
   const handleClick = () => {
     window.scrollTo({ top: 10, behavior: "smooth" });
@@ -77,7 +76,6 @@ const FeatureProducts = () => {
     }
     // Clear toast message on unmount
   }, [dispatch, toastMessage]);
-
 
   const handleFavoriteClick = (_id, event) => {
     event.preventDefault();
@@ -104,8 +102,6 @@ const FeatureProducts = () => {
 
     setClickedProducts(newClickedProducts);
   };
-
-  
 
   const wishlistColor = useSelector((state) => state.wishlist.items);
   console.log("wishlist: ", wishlistColor);
@@ -295,6 +291,9 @@ const Wrapper = styled.div`
     font-size: 15px;
     color: #82400b;
   }
+  @media (max-width: 480px) {
+    width: 80%;
+  }
 `;
 const Carousel = styled.div`
   padding: 1rem 4rem 4rem;
@@ -385,10 +384,9 @@ const Carousel = styled.div`
   .feature-link {
   }
 
-  @media (max-width: 768px) and (min-width: 460px){
-    
-    h2{
-      font-size: 28px;
+  @media (max-width: 768px) and (min-width: 460px) {
+    .Flink {
+      margin-left: 2.5rem;
     }
   }
 `;
