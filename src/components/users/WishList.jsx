@@ -400,14 +400,22 @@ const DownSection = styled.div`
     font-weight: bold;
     font-size: 16px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 768px) and (min-width:470px){
       font-size: 14px;
+      img{
+        display: none;
+      }
     }
   }
   .price > img {
     padding-right: 5px;
     height: 12px;
     width: 10px;
+    @media (max-width:460px){
+      img{
+        display: none;
+      }
+    }
   }
   .star {
     padding-left: 10px;
@@ -429,9 +437,11 @@ const DownSection = styled.div`
   //   }
   // }
 
-  @media (max-width: 768px) {
+  @media (max-width: 768px) and (min-width: 470px) {
     padding: 1rem;
+    img{
 
+    }
     .item {
       height: 300px;
     }

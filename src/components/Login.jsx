@@ -282,10 +282,11 @@ const Wrapper = styled.div`
     }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 767px) and (min-width: 460px) {
     .container {
       width: 95%;
       max-width: 400px;
+      
     }
 
     #content-p {

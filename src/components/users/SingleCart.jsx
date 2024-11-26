@@ -206,14 +206,15 @@ const Container = styled.div`
     align-items: center;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 768px) and (min-width: 460px) {
     .quantity-holder {
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     width: 40px;
-    border: 1px solid #796f6f;
+    border:none;
+    
     margin: 0 10px;
   }
     h4 {
