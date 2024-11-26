@@ -281,7 +281,7 @@ const GridItem = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 768px) and (min-width: 460px) {
     
     height: 350px;
     width: 70%;
@@ -321,20 +321,6 @@ const GridItem = styled.div`
 
   }
 
-  @media (max-width: 480px) {
-    height: auto;
-    width: 100%;
-    .wish {
-      height: 1.8rem;
-      width: 1.8rem;
-    }
-    .price {
-      font-size: 11px;
-    }
-    #author, #category {
-      font-size: 10px;
-      padding-left: 10%;
-    }
-  }
+  
 `;
 

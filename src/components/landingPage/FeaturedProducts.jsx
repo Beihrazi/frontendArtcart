@@ -45,6 +45,7 @@ const FeatureProducts = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          initialSlide: 1,
         },
       },
     ],
@@ -384,7 +385,8 @@ const Carousel = styled.div`
   .feature-link {
   }
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) and (min-width: 460px){
+    
     h2{
       font-size: 28px;
     }
